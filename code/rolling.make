@@ -24,11 +24,11 @@ ifeq ($(config),debug)
   TARGETDIR  = debug
   TARGET     = $(TARGETDIR)/rolling
   DEFINES   += -D_DEBUG -DDEBUG
-  INCLUDES  += -Ivecmath/include
+  INCLUDES  += -Ivecmath/include -Iinclude -I/usr/include
   CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -g -std=c++0x -Wno-deprecated
   CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += `if [ "\`uname\`" = "Darwin" ]; then echo "-framework OpenGL -framework GLUT -lRK4_mac"; else echo "-lGL -lGLU -lglut -lRK4"; fi;` -Llib -Ldebug
+  LDFLAGS   += `if [ "\`uname\`" = "Darwin" ]; then echo "-framework OpenGL -framework GLUT -framework Cocoa -framework AGL -framework Carbon -L/usr/local/lib -lfltk -lfltk_gl"; else echo "-lGL -lGLU -lglut "; fltk-config --use-gl --ldflags; fi;` -Ldebug
   LIBS      += -lvecmath
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += debug/libvecmath.a
@@ -48,11 +48,11 @@ ifeq ($(config),release)
   TARGETDIR  = release
   TARGET     = $(TARGETDIR)/rolling
   DEFINES   += -DNDEBUG
-  INCLUDES  += -Ivecmath/include
+  INCLUDES  += -Ivecmath/include -Iinclude -I/usr/include
   CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -O2 -std=c++0x -Wno-deprecated
   CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -Wl,-x `if [ "\`uname\`" = "Darwin" ]; then echo "-framework OpenGL -framework GLUT -lRK4_mac"; else echo "-lGL -lGLU -lglut -lRK4"; fi;` -Llib -Lrelease
+  LDFLAGS   += -Wl,-x `if [ "\`uname\`" = "Darwin" ]; then echo "-framework OpenGL -framework GLUT -framework Cocoa -framework AGL -framework Carbon -L/usr/local/lib -lfltk -lfltk_gl"; else echo "-lGL -lGLU -lglut "; fltk-config --use-gl --ldflags; fi;` -Lrelease
   LIBS      += -lvecmath
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += release/libvecmath.a
@@ -70,6 +70,9 @@ endif
 OBJECTS := \
 	$(OBJDIR)/camera.o \
 	$(OBJDIR)/main.o \
+	$(OBJDIR)/rollingapp.o \
+	$(OBJDIR)/rollingview.o \
+	$(OBJDIR)/rollingui.o \
 
 RESOURCES := \
 
@@ -134,6 +137,15 @@ $(OBJDIR)/camera.o: src/camera.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/main.o: src/main.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/rollingapp.o: src/rollingapp.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/rollingview.o: src/rollingview.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/rollingui.o: src/rollingui.cxx
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 

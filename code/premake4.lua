@@ -11,29 +11,32 @@ assignment = "rolling"
 solution(assignment)
   configurations { "Debug", "Release" }
   if not os.is("windows") then
-    buildoptions{"-std=c++0x", "-Wno-deprecated"}
+    buildoptions{"-std=c++0x"}
   else
-    buildoptions{"/D WIN32", "-Wno-deprecated"}
+    buildoptions{"/D WIN32"}
   end
+
+  buildoptions{"-Wno-deprecated"}
   
   configuration { "Debug" }
     targetdir "debug"
  
   configuration { "Release" }
     targetdir "release"
-    
 project(assignment)
   language "C++"
   kind     "ConsoleApp"
-  files  { "src/**.cpp", "src/**.h" }
+  files  { "src/**.cpp", "src/**.h", "src/**.cxx" }
   includedirs {"vecmath/include"}
-  libdirs {"lib"}
+  includedirs {"include"}
+  includedirs {"/usr/include"}    
   
   if not os.is("windows") then
-    linkoptions {[[`if [ "\`uname\`" = "Darwin" ]; then echo "-framework OpenGL -framework GLUT -lRK4_mac"; else echo "-lGL -lGLU -lglut -lRK4"; fi;`]]}
+    linkoptions {[[`if [ "\`uname\`" = "Darwin" ]; then echo "-framework OpenGL -framework GLUT -framework Cocoa -framework AGL -framework Carbon -L/usr/local/lib -lfltk -lfltk_gl"; else echo "-lGL -lGLU -lglut "; fltk-config --use-gl --ldflags; fi;`]]}
   else
-    links {"freeglut"}
-    includedirs {"include"}
+    links {"freeglut", "fltk", "fltkgl", "fltkforms", "fltkimages", "fltkzlib", "fltkjpeg", "fltkpng"}
+    includedirs {"include", "include/FL", "include/GL"}
+    libdirs {"lib"}
   end
   links {"vecmath"}
   
@@ -42,8 +45,6 @@ project(assignment)
     flags   { "Symbols" }
     if not os.is("windows") then
       postbuildcommands {"cp debug/" .. assignment .. " " .. assignment}
-    else
-      links {"RK4D"}
     end
 
   configuration { "Release*" }
@@ -51,8 +52,6 @@ project(assignment)
     flags   { "Optimize" } 
     if not os.is("windows") then
       postbuildcommands {"cp release/" .. assignment .. " " .. assignment}
-    else
-      links {"RK4"}
     end
 
 include("vecmath")

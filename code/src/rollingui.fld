@@ -1,0 +1,48 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0302 
+header_name {.h} 
+code_name {.cxx}
+class RollingUI {open
+} {
+  Function {RollingUI()} {open
+  } {
+    Fl_Window {} {open
+      xywh {63 113 643 458} type Double visible
+    } {
+      Fl_Group VChange {
+        xywh {20 65 50 245}
+      } {
+        Fl_Roller vrot {
+          xywh {20 65 25 245}
+        }
+        Fl_Slider ypan {
+          xywh {45 65 25 245}
+        }
+      }
+      Fl_Group HChange {open
+        xywh {165 365 300 50}
+      } {
+        Fl_Roller hrot {
+          xywh {165 365 300 25} type Horizontal
+        }
+        Fl_Slider xpan {
+          xywh {165 390 300 25} type Horizontal
+        }
+      }
+      Fl_Group MainView {open
+        xywh {25 25 510 327}
+      } {
+        Fl_Box scene_view {
+          label label
+          xywh {115 63 420 289}
+          code0 {\#include "RollingView.h"}
+          class RollingView
+        }
+      }
+      Fl_Value_Slider zoom {
+        label {slider:}
+        xywh {115 10 380 20} type Horizontal textsize 14
+      }
+    }
+  }
+} 
