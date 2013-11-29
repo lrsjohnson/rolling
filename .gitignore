@@ -8,6 +8,10 @@
 *.so
 *.dylib
 
+# Temporary files
+.*#
+*~
+
 # Compiled Static libraries
 *.lai
 *.la
