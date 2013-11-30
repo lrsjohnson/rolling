@@ -4,6 +4,10 @@
 *.o
 *.d
 
+# Compiled binaries
+code/rolling
+code/debug/rolling
+
 # Compiled Dynamic libraries
 *.so
 *.dylib
