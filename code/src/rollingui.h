@@ -22,5 +22,6 @@ public:
   Fl_Group *MainView;
   RollingView *scene_view;
   Fl_Value_Slider *zoom;
+  void show();
 };
 #endif
