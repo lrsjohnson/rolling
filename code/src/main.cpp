@@ -5,6 +5,8 @@
 #include "extra.h"
 #include "Vector3f.h"
 
+#include "rollingapp.h"
+
 using std::cout;
 using std::endl;
 
@@ -167,38 +169,48 @@ namespace {
 
 	glutTimerFunc(t, &timerFunc, t);
     }
+
+    void glutInitMainFunction(int argc, char* argv[]) {
+	glutInit(&argc, argv);
+	
+	// Double buffer for animation
+	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );    
+	
+	glutInitWindowPosition(INIT_WINDOW_X, INIT_WINDOW_Y);
+	glutInitWindowSize(INIT_WINDOW_W, INIT_WINDOW_H);
+	
+	initCamera();
+	
+	glutCreateWindow("Assignment 4");
+	
+	initRendering();
+	
+	// Moue resizing
+	glutReshapeFunc(reshapeFunc);    
+	
+	// Interactivity
+	glutMouseFunc(mouseFunc);
+	glutMotionFunc(motionFunc);
+	
+	// Display callback
+	glutDisplayFunc(drawScene);
+	
+	// Timer function
+	glutTimerFunc(20, timerFunc, 20);    
+	
+	glutMainLoop();
+    }
 }
 
 int main(int argc, char* argv[]) {
     cout << "Starting main..." << endl;
-    glutInit(&argc, argv);
 
-    // Double buffer for animation
-    glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );    
 
-    glutInitWindowPosition(INIT_WINDOW_X, INIT_WINDOW_Y);
-    glutInitWindowSize(INIT_WINDOW_W, INIT_WINDOW_H);
+    RollingApplication::Instance()->Init(argc, argv);
 
-    initCamera();
+    int ret = RollingApplication::Instance()->Run();
 
-    glutCreateWindow("Assignment 4");
-
-    initRendering();
-
-    // Moue resizing
-    glutReshapeFunc(reshapeFunc);    
-
-    // Interactivity
-    glutMouseFunc(mouseFunc);
-    glutMotionFunc(motionFunc);
-
-    // Display callback
-    glutDisplayFunc(drawScene);
-
-    // Timer function
-    glutTimerFunc(20, timerFunc, 20);    
+    delete RollingApplication::Instance();
     
-    glutMainLoop();
-
-    return 0;
+    return ret;
 }

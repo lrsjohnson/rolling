@@ -14,5 +14,15 @@ void RollingApplication::Init(int argc,
     // Do lots of stuff
     ui_ = new RollingUI();
 };
-					     
 
+RollingApplication::~RollingApplication() {
+    // FLTK handles widget deletion
+    delete ui_;
+};
+					     
+int RollingApplication::Run() {
+    Fl::visual(FL_RGB | FL_DOUBLE);
+    ui_->show();
+
+    return Fl::run();
+};

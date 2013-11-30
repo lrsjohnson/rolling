@@ -44,3 +44,7 @@ RollingUI::RollingUI() {
     o->end();
   } // Fl_Double_Window* o
 }
+
+void RollingUI::show() {
+  printf("Hello, World!\n");
+}
