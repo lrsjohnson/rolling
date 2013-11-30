@@ -19,6 +19,6 @@ class RollingView : public Fl_Gl_Window {
  private:
     Camera* camera_;
 
-    void drawAxes();
+    void setupOpenGL();
 };
 #endif // ifndef ROLLINGVIEW_H
