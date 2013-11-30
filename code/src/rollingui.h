@@ -4,24 +4,19 @@
 #define rollingui_h
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Roller.H>
-#include <FL/Fl_Slider.H>
 #include "RollingView.h"
-#include <FL/Fl_Value_Slider.H>
+#include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Group.H>
 
 class RollingUI {
 public:
   RollingUI();
-  Fl_Group *VChange;
-  Fl_Roller *vrot;
-  Fl_Slider *ypan;
-  Fl_Group *HChange;
-  Fl_Roller *hrot;
-  Fl_Slider *xpan;
-  Fl_Group *MainView;
+  Fl_Double_Window *window;
   RollingView *scene_view;
-  Fl_Value_Slider *zoom;
+  static Fl_Menu_Item menu_[];
+  static Fl_Menu_Item *file_menu;
+  static Fl_Menu_Item *file_new_button;
+  Fl_Group *status_bar;
   void show();
 };
 #endif
