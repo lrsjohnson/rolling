@@ -6,6 +6,8 @@
 #include "rollingui.h"
 #include "rollingsim.h"
 
+#include <sys/time.h>
+
 /**
  * RollingApplication is a singleton.
  */
@@ -34,12 +36,11 @@ class RollingApplication {
     // Timer callbacks
     static void timer_callback(void* userdata);
 
-    void step();
-    void start_timer();
-    void stop_timer();
+    void onTick();
+    void startTimer();
+    void stopTimer();
 
-    inline bool animating() { return animating_; };
-
+    inline bool timer_running() { return timer_running_; };
 
  private:
     // Singleton instance
@@ -53,12 +54,15 @@ class RollingApplication {
     RollingUI* ui_;
     void drawAxes();
 
-    bool animating_;
+    // Timer
+    bool timer_running_;
+    timeval last_tick_tv_;
     
     // RollingApplication does not own camera_ref_ or view_ref_
     Camera* camera_ref_;
     RollingView* view_ref_;
 
+    
     float x;
 };
  

@@ -1,6 +1,7 @@
 #include "rollingapp.h"
 
 #include <iostream>
+#include <sys/time.h>
 
 using std::cout;
 using std::endl;
@@ -22,12 +23,12 @@ RollingApplication::~RollingApplication() {
 };
 
 
-void RollingApplication::Init(int argc,
-			      char* argv[]) {
+void RollingApplication::Init(int argc, char* argv[]) {
   // Initialize UI
   ui_ = new RollingUI();
-  animating_ = false;
+  timer_running_ = false;
   x = 0;
+  gettimeofday(&last_tick_tv_, NULL);
 
   // Initialize simulation
   rolling_sim_ = new RollingSimulation();
@@ -52,10 +53,10 @@ void RollingApplication::loadView(RollingView* view) {
 void RollingApplication::onKeyUp(unsigned key) {
   cout << "Pressed key num " << key << "." << endl;
   if (key == 32) {
-    if (!animating_) {
-      start_timer();
+    if (!timer_running_) {
+      startTimer();
     } else {
-      stop_timer();
+      stopTimer();
     }
   }
 };
@@ -144,29 +145,51 @@ void RollingApplication::redraw() {
   view_ref_->redraw();
 };
 
-void RollingApplication::step() {
-  x += 0.01;
-  cout << x << endl;
+void timeval_subtract (timeval* result, timeval* x, timeval* y) {
+  /* Perform the carry for the later subtraction by updating y. */
+  if (x->tv_usec < y->tv_usec) {
+    int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
+    y->tv_usec -= 1000000 * nsec;
+    y->tv_sec += nsec;
+  }
+  if (x->tv_usec - y->tv_usec > 1000000) {
+    int nsec = (x->tv_usec - y->tv_usec) / 1000000;
+    y->tv_usec += 1000000 * nsec;
+    y->tv_sec -= nsec;
+  }
+  /* Compute the time remaining to wait.
+     tv_usec is certainly positive. */
+  result->tv_sec = x->tv_sec - y->tv_sec;
+  result->tv_usec = x->tv_usec - y->tv_usec;
+};
+ 
+void RollingApplication::onTick() {
+  timeval now_tv;
+  gettimeofday(&now_tv, NULL);
+  timeval diff_tv;
+  timeval_subtract(&diff_tv, &now_tv, &last_tick_tv_);
+  float time_step = diff_tv.tv_sec + diff_tv.tv_usec / 1000000.0;
+  rolling_sim_->step(time_step);
+  last_tick_tv_ = now_tv;
 };
 
 void RollingApplication::timer_callback(void* userdata) {
   RollingApplication* o = (RollingApplication*) userdata;
-  cout << "timer callback" << endl;
   // Do something
-  o->step();  
+  o->onTick();  
   o->redraw();
-
-  if(o->animating()) {
+  if(o->timer_running()) {
     Fl::repeat_timeout(FPS, timer_callback, userdata);
   }
 };
 
 
-void RollingApplication::start_timer() {
-  animating_ = true;
+void RollingApplication::startTimer() {
+  timer_running_ = true;
+  gettimeofday(&last_tick_tv_, NULL);  
   Fl::add_timeout(FPS, timer_callback, (void*)this);
 };
 
-void RollingApplication::stop_timer() {
-  animating_ = false;
+void RollingApplication::stopTimer() {
+  timer_running_ = false;
 };

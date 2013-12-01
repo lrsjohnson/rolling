@@ -9,9 +9,13 @@ class RollingBall {
   ~RollingBall();
 
   void draw();
+
+  float rotation;
+
  private:
   Vector3f center_;
   float radius_;
+
 
   static const int RENDER_SLICES;
   static const int RENDER_STACKS;   

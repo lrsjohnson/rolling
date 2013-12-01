@@ -205,7 +205,6 @@ namespace {
 int main(int argc, char* argv[]) {
     cout << "Starting main..." << endl;
 
-
     RollingApplication::Instance()->Init(argc, argv);
 
     int ret = RollingApplication::Instance()->Run();

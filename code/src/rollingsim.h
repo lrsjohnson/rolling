@@ -10,6 +10,7 @@ class RollingSimulation {
   ~RollingSimulation();
 
   void draw();
+  void step(float time_step);
   
  private:
   RollingWorld* world_;
