@@ -22,6 +22,11 @@ class RollingSimulation {
 
   system_state_t getState();
   void setState(system_state_t);  
+
+  void onLeft();
+  void onUp();
+  void onRight();
+  void onDown();  
   
   // Call for the boost runge-kutta stepper
   static void system_func(const system_state_t& x,

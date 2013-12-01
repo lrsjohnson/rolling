@@ -58,6 +58,14 @@ void RollingApplication::onKeyUp(unsigned key) {
     } else {
       stopTimer();
     }
+  } else if (key == 65361) { // LEFT KEY
+    rolling_sim_->onLeft();
+  } else if (key == 65362) { // LEFT KEY
+    rolling_sim_->onUp();
+  } else if (key == 65363) { // LEFT KEY
+    rolling_sim_->onRight();
+  } else if (key == 65364) { // LEFT KEY
+    rolling_sim_->onDown();
   }
 };
 
@@ -109,7 +117,7 @@ void RollingApplication::draw() {
   rolling_sim_->draw();
 
   // Maybe draw the axes
-  drawAxes();
+  //  drawAxes();
 };
 
 

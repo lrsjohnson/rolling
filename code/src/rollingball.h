@@ -2,6 +2,7 @@
 #define ROLLING_BALL_H
 
 #include "Vector3f.h"
+#include "Matrix4f.h"
 
 class RollingBall {
  public:
@@ -10,13 +11,18 @@ class RollingBall {
 
   void draw();
 
-  float rotation;
+  float radius() { return radius_; };
 
- private:
+  Matrix4f rotation_;
+  float axis_rotation_;
+  Vector3f velocity_;
   Vector3f center_;
+  
+ private:
   float radius_;
 
 
+  
   static const int RENDER_SLICES;
   static const int RENDER_STACKS;   
 };
