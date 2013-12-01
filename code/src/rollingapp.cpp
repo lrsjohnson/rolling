@@ -164,13 +164,15 @@ void timeval_subtract (timeval* result, timeval* x, timeval* y) {
 };
  
 void RollingApplication::onTick() {
+  /*
   timeval now_tv;
   gettimeofday(&now_tv, NULL);
   timeval diff_tv;
   timeval_subtract(&diff_tv, &now_tv, &last_tick_tv_);
   float time_step = diff_tv.tv_sec + diff_tv.tv_usec / 1000000.0;
-  rolling_sim_->step(time_step);
   last_tick_tv_ = now_tv;
+  */
+  rolling_sim_->step(FPS);
 };
 
 void RollingApplication::timer_callback(void* userdata) {
