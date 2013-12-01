@@ -24,11 +24,13 @@ RollingApplication::~RollingApplication() {
 
 void RollingApplication::Init(int argc,
 			      char* argv[]) {
-    // Do lots of stuff
-    ui_ = new RollingUI();
+  // Initialize UI
+  ui_ = new RollingUI();
+  animating_ = false;
+  x = 0;
 
-    animating_ = false;
-    x = 0;
+  // Initialize simulation
+  rolling_sim_ = new RollingSimulation();
 };
 
 int RollingApplication::Run() {
@@ -103,8 +105,10 @@ void RollingApplication::draw() {
   glLoadMatrixf(camera_ref_->viewMatrix());
   
   // Draw the scene
+  rolling_sim_->draw();
+
+  // Maybe draw the axes
   drawAxes();
-  
 };
 
 

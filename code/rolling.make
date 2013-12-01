@@ -71,7 +71,10 @@ OBJECTS := \
 	$(OBJDIR)/camera.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/rollingapp.o \
+	$(OBJDIR)/rollingball.o \
+	$(OBJDIR)/rollingsim.o \
 	$(OBJDIR)/rollingview.o \
+	$(OBJDIR)/rollingworld.o \
 	$(OBJDIR)/rollingui.o \
 
 RESOURCES := \
@@ -142,7 +145,16 @@ $(OBJDIR)/main.o: src/main.cpp
 $(OBJDIR)/rollingapp.o: src/rollingapp.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/rollingball.o: src/rollingball.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/rollingsim.o: src/rollingsim.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/rollingview.o: src/rollingview.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/rollingworld.o: src/rollingworld.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/rollingui.o: src/rollingui.cxx

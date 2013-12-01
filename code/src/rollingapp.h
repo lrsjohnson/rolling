@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "rollingview.h"
 #include "rollingui.h"
+#include "rollingsim.h"
 
 /**
  * RollingApplication is a singleton.
@@ -41,7 +42,13 @@ class RollingApplication {
 
 
  private:
+    // Singleton instance
     static RollingApplication* instance_;
+
+    // Simulation reference
+    RollingSimulation* rolling_sim_;
+    
+    // User Interface Members
     friend class RollingUI;
     RollingUI* ui_;
     void drawAxes();
