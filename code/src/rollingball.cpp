@@ -42,7 +42,7 @@ void RollingBall::draw() {
 
   glPopMatrix();
 
-  // Attempt at shadow 
+  // Attempt at shadow
   glTranslatef(0, -radius_, 0);
   glScaled(0.9, 0.02, 0.9);
 
@@ -65,10 +65,7 @@ void RollingBall::draw() {
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specColor_d);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess_d);    
   
-
-  
   // Revert state, etc.
-  
   glPopMatrix();
   glPopAttrib();
 };
