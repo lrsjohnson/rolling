@@ -108,7 +108,7 @@ void RollingApplication::draw() {
 
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, diffColor);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);    
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
   
     // Load camera view matrix
     glLoadMatrixf(camera_ref_->viewMatrix());
