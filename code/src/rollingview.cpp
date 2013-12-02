@@ -37,7 +37,10 @@ int RollingView::handle( int event ) {
     case FL_PUSH: RollingApplication::Instance()->onMouseClick(eventButton, eventCoordX, eventCoordY); break;
     case FL_DRAG: RollingApplication::Instance()->onMouseDrag(eventCoordX, eventCoordY); break;
     case FL_RELEASE: RollingApplication::Instance()->onMouseRelease(eventCoordX, eventCoordY); break;    
+    case FL_KEYDOWN: RollingApplication::Instance()->onKeyDown(Fl::event_key()); break;        
     case FL_KEYUP: RollingApplication::Instance()->onKeyUp(Fl::event_key()); break;
+    case FL_FOCUS: break;
+    case FL_UNFOCUS: break;        
     default: return 0;
     }
     redraw();

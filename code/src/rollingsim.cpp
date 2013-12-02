@@ -46,9 +46,13 @@ const float RollingSimulation::MIN_VELOCITY = 0.001;
 void RollingSimulation::step(float time_step) {
     // 1. update velocities
 
+    
     // dampening/friction
     ball_->velocity_ *= 0.95;
     ball_->velocity_ += time_step * gravity_;
+
+    external_vel.print();
+    ball_->velocity_ += time_step * 12 * external_vel;    
 
     // 2. detect collisions; adjust/project velocities to correct direction
     vector<Vector3f> collision_points;

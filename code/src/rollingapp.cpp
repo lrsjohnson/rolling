@@ -52,7 +52,7 @@ void RollingApplication::loadView(RollingView* view) {
 /* Events from UI */
 
 void RollingApplication::onKeyUp(unsigned key) {
-    cout << "Pressed key num " << key << "." << endl;
+    cout << "Released key num " << key << "." << endl;
     if (key == 32) {
         if (!timer_running_) {
             startTimer();
@@ -60,21 +60,39 @@ void RollingApplication::onKeyUp(unsigned key) {
             stopTimer();
         }
     } else if (key == 65361) { // LEFT KEY
-        rolling_sim_->onLeft();
+        rolling_sim_->external_vel[0] = 0;
     } else if (key == 65362) { // UP KEY
-        rolling_sim_->onUp();
+        rolling_sim_->external_vel[2] = 0;
     } else if (key == 65363) { // RIGHT KEY
-        rolling_sim_->onRight();
+        rolling_sim_->external_vel[0] = 0;
     } else if (key == 65364) { // DOWN KEY
-        rolling_sim_->onDown();
+        rolling_sim_->external_vel[2] = 0;
     } else if (key == 'q') {
-        rolling_sim_->onUpward();
+        rolling_sim_->external_vel[1] = 0;
     } else if (key == 'a') {
-        rolling_sim_->onDownward();        
+        rolling_sim_->external_vel[1] = 0;
     } else if (key == 'r') {
         rolling_sim_->onReset();
     }
 };
+
+void RollingApplication::onKeyDown(unsigned key) {
+    cout << "Pressed key num " << key << "." << endl;
+if (key == 65361) { // LEFT KEY
+        rolling_sim_->external_vel[0] = -1;
+    } else if (key == 65362) { // UP KEY
+        rolling_sim_->external_vel[2] = -1;
+    } else if (key == 65363) { // RIGHT KEY
+        rolling_sim_->external_vel[0] = 1;
+    } else if (key == 65364) { // DOWN KEY
+        rolling_sim_->external_vel[2] = 1;
+    } else if (key == 'q') {
+        rolling_sim_->external_vel[1] = 1;
+    } else if (key == 'a') {
+        rolling_sim_->external_vel[1] = -1;
+    }
+};
+
 
 void RollingApplication::onMouseClick(unsigned button, int x, int y) {
     Camera::Button camera_button;

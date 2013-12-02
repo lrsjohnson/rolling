@@ -36,7 +36,8 @@ class RollingSimulation {
     static void system_func(const system_state_t& x,
                             system_state_t& dxdt,
                             const double t);
-  
+
+    Vector3f external_vel;
  private:
     RollingWorld* world_;
     RollingBall* ball_;
