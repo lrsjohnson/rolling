@@ -37,6 +37,8 @@ class RollingSimulation {
     RollingWorld* world_;
     RollingBall* ball_;
     runge_kutta4<system_state_t>* stepper_;
+
+    static const float MIN_VELOCITY;
 };
 
 #endif // ifndef ROLLING_SIM_H

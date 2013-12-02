@@ -38,13 +38,20 @@ void RollingSimulation::setState(system_state_t state) {
     //  ball_->rotation = state[0];
 };
 
+const float RollingSimulation::MIN_VELOCITY = 0.0001;
+
 void RollingSimulation::step(float time_step) {
     // 1. update velocities
     ball_->velocity_ *= 0.9;
 
-    // 2. detect collisions after applying velocities; adjust velicities to correct direction
+    // 2. detect collisions after applying velocities; adjust velocities to correct direction
 
     // 3. move ball, apply rotation
+
+    if (ball_->velocity_.abs() < MIN_VELOCITY) {
+        ball_->velocity_ = Vector3f(0,0,0);
+        return;
+    }
 
     Vector3f vector_to_contact = Vector3f(0, -1, 0);
     Vector3f torque_vector = -ball_->velocity_;

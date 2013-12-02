@@ -32,12 +32,11 @@ void RollingBall::draw() {
     glPushMatrix();
 
     // Adjust sphere rotation
-
     glTranslatef(center_[0], center_[1], center_[2]);
 
 
     glPushMatrix();
-  
+
     glMultMatrixf(rotation_);
     // Draw Sphere
     //  glShadeMode(SMOOTH);
@@ -48,6 +47,7 @@ void RollingBall::draw() {
     glPopMatrix();
 
     // Attempt at shadow
+    /*
     glTranslatef(0, -radius_, 0);
     glScaled(0.9, 0.02, 0.9);
 
@@ -68,7 +68,8 @@ void RollingBall::draw() {
 
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, diffColor_d);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specColor_d);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess_d);    
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess_d);
+    */
   
     // Revert state, etc.
     glPopMatrix();
