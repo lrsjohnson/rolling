@@ -27,7 +27,8 @@ RollingWorld::RollingWorld() {
     for (int r = 0; r < num_rows; r++) {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
-            landscape_data_[r].push_back(rand_height() - 0.3 * abs(r % (num_rows / 4) - num_rows / 8));
+            landscape_data_[r].push_back(rand_height() -
+                                         0.3 * abs(r % (num_rows / 4) - num_rows / 8));
         }
     }
 };
@@ -109,6 +110,7 @@ void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) 
     Vector3f normal_v = Vector3f::cross(p3 - p1, p2 - p1).normalized();
     
     glBegin(GL_TRIANGLES);
+    glShadeModel(GL_SMOOTH);
     glNormal(normal_v);
     glVertex(p1);
     

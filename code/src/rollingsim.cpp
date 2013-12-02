@@ -15,7 +15,7 @@ RollingSimulation::RollingSimulation() {
     ball_ = new RollingBall(Vector3f(0, 2.0, 0), 1.0);
     stepper_ = new runge_kutta4<system_state_t>();
 
-    gravity_ = Vector3f(0, -8, 0);
+    gravity_ = Vector3f(0, -10, 0);
 };
 
 RollingSimulation::~RollingSimulation() {
@@ -101,6 +101,9 @@ void RollingSimulation::step(float time_step) {
         ball_->t_vel_ = Vector3f::ZERO;
         return;
     }
+
+    //    ball_->t_vel_ = ball_->t_vel_.normalized() * ball_->velocity_.abs();
+    ball_->velocity_ = ball_->t_vel_;
 
     Vector3f vector_to_contact = ball_->avg_collision;
     Vector3f torque_vector = -ball_->t_vel_;
