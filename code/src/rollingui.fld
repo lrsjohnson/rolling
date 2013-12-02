@@ -7,12 +7,12 @@ class RollingUI {open
   Function {RollingUI()} {open
   } {
     Fl_Window window {
-      label {Rolling Sphere} open selected
+      label {Rolling Sphere} open
       xywh {957 107 775 596} type Double resizable visible
     } {
       Fl_Box scene_view {
         label {OpenGL View}
-        xywh {0 54 775 516} box BORDER_BOX color 0 labelcolor 55 resizable
+        xywh {0 52 775 516} box BORDER_BOX color 0 labelcolor 55 resizable
         code0 {\#include "RollingView.h"}
         class RollingView
       }
