@@ -27,12 +27,11 @@ void RollingBall::draw() {
     glPushMatrix();
 
     // Adjust sphere rotation
-
     glTranslatef(center_[0], center_[1], center_[2]);
 
 
     glPushMatrix();
-  
+
     glMultMatrixf(rotation_);
     // Draw Sphere
     //  glShadeMode(SMOOTH);
