@@ -3,6 +3,8 @@
 
 #include <cassert>
 
+#define DEBUG_SPHERE true
+
 const int RollingBall::RENDER_SLICES = 20;
 const int RollingBall::RENDER_STACKS = 15;
 
@@ -35,16 +37,18 @@ void RollingBall::draw() {
     glTranslatef(center_[0], center_[1], center_[2]);
 
 
-    glPushMatrix();
 
-    glMultMatrixf(rotation_);
     // Draw Sphere
     //  glShadeMode(SMOOTH);
-    //  glutWireSphere(radius_, RENDER_SLICES, RENDER_STACKS);
-    drawSphere();
 
-
-    glPopMatrix();
+    if (DEBUG_SPHERE) {
+        drawDebugSphere();
+    } else {
+        glPushMatrix();
+        glMultMatrixf(rotation_);
+        drawSphere();
+        glPopMatrix();
+    }
 
     // Attempt at shadow
     /*
@@ -74,6 +78,22 @@ void RollingBall::draw() {
     // Revert state, etc.
     glPopMatrix();
     glPopAttrib();
+};
+
+void RollingBall::drawDebugSphere() {
+    glPushMatrix();
+    glMultMatrixf(rotation_);
+    glutWireSphere(radius_, RENDER_SLICES, RENDER_STACKS);
+    glPopMatrix();
+    
+    glDisable(GL_LIGHTING);
+    glBegin(GL_LINES);
+    glColor3f(0, 1, 1);
+    glVertex(0);
+    glColor3f(0, 1, 1);    
+    glVertex(velocity_);
+    glEnd();
+    glEnable(GL_LIGHTING);        
 };
 
 void RollingBall::drawSphere() {

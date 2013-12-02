@@ -26,12 +26,13 @@ RollingApplication::~RollingApplication() {
 void RollingApplication::Init(int argc, char* argv[]) {
     // Initialize UI
     ui_ = new RollingUI();
-    timer_running_ = false;
+    timer_running_ = true;
     x = 0;
     gettimeofday(&last_tick_tv_, NULL);
 
     // Initialize simulation
     rolling_sim_ = new RollingSimulation();
+    startTimer();
 };
 
 int RollingApplication::Run() {

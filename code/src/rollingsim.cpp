@@ -12,7 +12,7 @@ using std::vector;
 
 RollingSimulation::RollingSimulation() {
     world_ = new RollingWorld();
-    ball_ = new RollingBall(Vector3f(0,0,0), 1.0);
+    ball_ = new RollingBall(Vector3f(0, 1.5, 0), 1.0);
     stepper_ = new runge_kutta4<system_state_t>();
 };
 
@@ -23,6 +23,7 @@ RollingSimulation::~RollingSimulation() {
 };
 
 void RollingSimulation::draw() {
+    world_->sphere_c = ball_->center_;
     world_->draw();
     ball_->draw();
 };

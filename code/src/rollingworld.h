@@ -11,7 +11,11 @@ class RollingWorld {
     RollingWorld();
     void draw();
 
+    Vector3f sphere_c;
  private:
+
+    Vector3f closestPtOnTriangle(Vector3f p, Vector3f a, Vector3f b, Vector3f c);
+    
     Vector3f point(int r, int c);
     float r_to_x(int r);
     float c_to_z(int z);
@@ -28,6 +32,7 @@ class RollingWorld {
     int num_rows;
     int num_cols;
     vector<vector<float> > landscape_data_;
+
 };
 
 #endif // ifndef ROLLING_WORLD_H

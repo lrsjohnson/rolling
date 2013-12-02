@@ -3,7 +3,7 @@
 
 #include "Vector3f.h"
 #include "Matrix4f.h"
-#include <GL/gl.h>
+#include "extra.h"
 #include <iostream>
 using namespace std;
 
@@ -34,6 +34,8 @@ class RollingBall {
     unsigned int m_width;
     unsigned int m_height;
     void drawSphere();
+    void drawDebugSphere();
+
     void drawSphereFace(int p_recurse, double p_radius, Vector3f a, Vector3f b, Vector3f c);
 
 

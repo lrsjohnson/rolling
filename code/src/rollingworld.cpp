@@ -19,8 +19,8 @@ float rand_height() {
 
 RollingWorld::RollingWorld() {
     landscape_data_ = vector<vector<float> >();
-    num_rows = 24;
-    num_cols = 24;
+    num_rows = 8;
+    num_cols = 8;
     x_extent = 15;
     z_extent = 15;
     cout << "Creeating rolling world" << endl;
@@ -31,6 +31,57 @@ RollingWorld::RollingWorld() {
             cout << landscape_data_[r][c];
         }
     }
+};
+
+// Based on calculations from "Real Time Collision Detectino Book"
+Vector3f RollingWorld::closestPtOnTriangle(Vector3f p, Vector3f a, Vector3f b, Vector3f c) {
+    Vector3f ab = b - a;
+    Vector3f ac = c - a;
+
+    // Check if P in vertex region outside A
+    Vector3f ap = p - a;
+    float d1 = Vector3f::dot(ab, ap);
+    float d2 = Vector3f::dot(ac, ap);
+    if (d1 <= 0.0f && d2 <= 0.0f) return a; // barycentric coordinates (1,0,0)
+    
+    // Check if P in vertex region outside B
+    Vector3f bp = p - b;
+    float d3 = Vector3f::dot(ab, bp);
+    float d4 = Vector3f::dot(ac, bp);
+    if (d3 >= 0.0f && d4 <= d3) return b; // barycentric coordinates (0,1,0)
+    
+    // Check if P in edge region of AB, if so return projection of P onto AB
+    float vc = d1*d4 - d3*d2;
+    if (vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f) {
+        float v = d1 / (d1 - d3);
+        return a + v * ab; // barycentric coordinates (1-v,v,0) 
+    }
+    
+    // Check if P in vertex region outside C
+    Vector3f cp = p - c;
+    float d5 = Vector3f::dot(ab, cp);
+    float d6 = Vector3f::dot(ac, cp);
+    if (d6 >= 0.0f && d5 <= d6) return c; // barycentric coordinates (0,0,1)
+    
+    // Check if P in edge region of AC, if so return projection of P onto AC
+    float vb = d5*d2 - d1*d6;
+    if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f) {
+        float w = d2 / (d2 - d6);
+        return a + w * ac; // barycentric coordinates (1-w,0,w)
+    }
+    
+    // Check if P in edge region of BC, if so return projection of P onto BC
+    float va = d3*d6 - d5*d4;
+    if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f) {
+        float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+        return b + w * (c - b); // barycentric coordinates (0,1-w,w)
+    }
+    
+    // P inside face region. Compute Q through its barycentric coordinates (u,v,w)
+    float denom = 1.0f / (va + vb + vc);
+    float v = vb * denom;
+    float w = vc * denom;
+    return a + ab * v + ac * w; //=u*a+v*b+w*c,u=va*denom=1.0f-v-w
 };
 
 float RollingWorld::r_to_x(int r) {
@@ -66,6 +117,27 @@ void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) 
 
     glNormal(normal_v);
     glVertex(p3);
+
+    glEnd();
+    Vector3f cp = closestPtOnTriangle(sphere_c, p1, p2, p3);
+    float dist = (cp - sphere_c).abs();
+    cout << dist << endl;
+    if (dist < 1.0) {
+        glDisable(GL_LIGHTING);
+        glBegin(GL_LINES);
+        glColor3f(1.0, 0, 0);
+        glVertex(cp);
+        glColor3f(1.0, 0, 0);
+        glVertex(sphere_c);
+        glEnd();
+        glEnable(GL_LIGHTING);        
+    }
+        
+    glPushMatrix();
+    glTranslatef(cp[0], cp[1], cp[2]);
+    glutSolidCube(0.1);
+    glPopMatrix();
+    glBegin(GL_TRIANGLES);
 };
 
 // Draw the square [r, c] -> [r + 1, c + 1]
@@ -94,10 +166,7 @@ void RollingWorld::draw() {
     glPushMatrix();
 
     // Plane is offset by -1
-    glTranslatef(0, -1.0, 0);
-
     glBegin(GL_TRIANGLES);
-
 
     for (int r = 0; r < num_rows - 1; r++) {
         for (int c = 0; c < num_cols - 1; c++) {
