@@ -125,6 +125,7 @@ void RollingBall::drawDebugSphere() {
     glEnable(GL_LIGHTING);        
 };
 
+// Sphere drawing and texture mapping code adapted from http://www.cse.msu.edu/~cse872/tutorial4.html
 void RollingBall::drawSphere() {
     //glutSolidSphere(radius_, RENDER_SLICES, RENDER_STACKS);
     Vector3f a = Vector3f(1, 0, 0);
