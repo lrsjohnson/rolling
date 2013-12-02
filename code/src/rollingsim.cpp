@@ -12,8 +12,10 @@ using std::vector;
 
 RollingSimulation::RollingSimulation() {
     world_ = new RollingWorld();
-    ball_ = new RollingBall(Vector3f(0, 1.5, 0), 1.0);
+    ball_ = new RollingBall(Vector3f(0, 2.0, 0), 1.0);
     stepper_ = new runge_kutta4<system_state_t>();
+
+    gravity_ = Vector3f(0, -8, 0);
 };
 
 RollingSimulation::~RollingSimulation() {
@@ -39,32 +41,76 @@ void RollingSimulation::setState(system_state_t state) {
     //  ball_->rotation = state[0];
 };
 
-const float RollingSimulation::MIN_VELOCITY = 0.0001;
+const float RollingSimulation::MIN_VELOCITY = 0.001;
 
 void RollingSimulation::step(float time_step) {
     // 1. update velocities
-    ball_->velocity_ *= 0.9;
 
-    // 2. detect collisions after applying velocities; adjust velocities to correct direction
+    // dampening/friction
+    ball_->velocity_ *= 0.95;
+    ball_->velocity_ += time_step * gravity_;
 
-    // 3. move ball, apply rotation
+    // 2. detect collisions; adjust/project velocities to correct direction
+    vector<Vector3f> collision_points;
+    world_->getCollisions(ball_, &collision_points);
 
-    if (ball_->velocity_.abs() < MIN_VELOCITY) {
-        ball_->velocity_ = Vector3f(0,0,0);
+    ball_->collision_points = collision_points;
+
+    
+    if (collision_points.size() > 0) {
+        Vector3f avg_collision = Vector3f::ZERO;
+        int num_collisions = collision_points.size();
+        float max_penetration = 0;
+        for (int i = 0; i < num_collisions; i++) {
+            avg_collision += collision_points[i];
+            float penetration_dist = ball_->radius()*1.1 - (collision_points[i] - ball_->center_).abs();
+            if (penetration_dist > max_penetration) {
+                max_penetration = penetration_dist;
+            }
+        }
+        avg_collision =  avg_collision / (1.0f * num_collisions);
+        ball_->avg_collision = avg_collision - ball_->center_;
+
+        // 3. Account for collision by moving ball up
+        Vector3f collision_unit_normal = (avg_collision - ball_->center_).normalized();
+        ball_->velocity_ -= collision_unit_normal * max_penetration;
+
+        float vel_dot = Vector3f::dot(ball_->velocity_, collision_unit_normal);
+        if (vel_dot > 0) {
+            ball_->n_vel_ = vel_dot * collision_unit_normal;
+            ball_->t_vel_ = ball_->velocity_ - ball_->n_vel_;
+        } else {
+            ball_->n_vel_ = Vector3f::ZERO;
+            ball_->t_vel_ = ball_->velocity_;
+        }
+        
+        
+    } else {
+        ball_->avg_collision = Vector3f::ZERO;
+        ball_->n_vel_ = Vector3f::ZERO;
+        ball_->t_vel_ = ball_->velocity_;
+    }
+
+        
+    // 4. move ball, apply rotation
+    if (ball_->t_vel_.abs() < MIN_VELOCITY) {
+        ball_->t_vel_ = Vector3f::ZERO;
         return;
     }
 
-    Vector3f vector_to_contact = Vector3f(0, -1, 0);
-    Vector3f torque_vector = -ball_->velocity_;
+    Vector3f vector_to_contact = ball_->avg_collision;
+    Vector3f torque_vector = -ball_->t_vel_;
 
     Vector3f rotation_axis = Vector3f::cross(vector_to_contact, torque_vector);
 
-    ball_->center_ += ball_->velocity_ * time_step;
+    ball_->center_ += ball_->t_vel_ * time_step;
   
-    float dist_traveled = ball_->velocity_.abs() * time_step;
+    float dist_traveled = ball_->t_vel_.abs() * time_step;
     float radians_moved = dist_traveled / ball_->radius();
 
-    ball_->rotation_ = Matrix4f::rotation(rotation_axis, radians_moved) * ball_->rotation_;
+    if (rotation_axis.abs() > 0) {
+        ball_->rotation_ = Matrix4f::rotation(rotation_axis, radians_moved) * ball_->rotation_;
+    }
     // Old, via stepper:
     //  system_state_t out(2);
     //  stepper_->do_step(system_func, getState(), 0, out, time_step);
@@ -79,17 +125,30 @@ void RollingSimulation::system_func(const system_state_t& x,
 };
 
 void RollingSimulation::onLeft() {
-    ball_->velocity_ += Vector3f(-1, 0, 0);      
+    ball_->velocity_ += Vector3f(-3, 0, 0);      
 };
 
 void RollingSimulation::onUp() {
-    ball_->velocity_ += Vector3f(0, 0, -1);    
+    ball_->velocity_ += Vector3f(0, 0, -3);    
 };
 
 void RollingSimulation::onRight() {
-    ball_->velocity_ += Vector3f(1, 0, 0);  
+    ball_->velocity_ += Vector3f(3, 0, 0);  
 };
 
 void RollingSimulation::onDown() {
-    ball_->velocity_ += Vector3f(0, 0, 1);
+    ball_->velocity_ += Vector3f(0, 0, 3);
+};
+
+void RollingSimulation::onUpward() {
+    ball_->velocity_ += Vector3f(0, 1, 0);
+};
+
+void RollingSimulation::onDownward() {
+    ball_->velocity_ += Vector3f(0, -1, 0);
+};
+
+void RollingSimulation::onReset() {
+    ball_->center_ = Vector3f(0, 2.0, 0);
+    ball_->velocity_ = Vector3f(0, 0, 0);
 };

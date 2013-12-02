@@ -4,6 +4,8 @@
 #include <vector>
 #include "Vector3f.h"
 
+#include "rollingball.h"
+
 using std::vector;
 
 class RollingWorld {
@@ -11,9 +13,10 @@ class RollingWorld {
     RollingWorld();
     void draw();
 
+    void getCollisions(RollingBall* ball, vector<Vector3f>* collision_points);
+    
     Vector3f sphere_c;
  private:
-
     Vector3f closestPtOnTriangle(Vector3f p, Vector3f a, Vector3f b, Vector3f c);
     
     Vector3f point(int r, int c);
@@ -27,6 +30,16 @@ class RollingWorld {
                       int r3, int c3);
     void drawSquare(int r, int c);
 
+    void getCollisionsForTriangle(int r1, int c1,
+                                  int r2, int c2,
+                                  int r3, int c3,
+                                  RollingBall* ball,
+                                  vector<Vector3f>* collision_points);
+    void getCollisionsForSquare(int r, int c,
+                                RollingBall* ball,
+                                vector<Vector3f>* collision_points);
+
+    
     float x_extent;
     float z_extent;
     int num_rows;

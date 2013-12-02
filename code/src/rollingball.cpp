@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#define DEBUG_SPHERE true
+#define DEBUG_SPHERE false
 
 const int RollingBall::RENDER_SLICES = 20;
 const int RollingBall::RENDER_STACKS = 15;
@@ -92,7 +92,36 @@ void RollingBall::drawDebugSphere() {
     glVertex(0);
     glColor3f(0, 1, 1);    
     glVertex(velocity_);
+
+    if (avg_collision.abs() > 0) {
+        // Avg collision
+        glColor3f(0, 1, 0);
+        glVertex(0);
+        glColor3f(0, 1, 0);    
+        glVertex(avg_collision - center_);
+
+        // Velocities
+        glColor3f(1, 1, 0);
+        glVertex(0);
+        glColor3f(1, 1, 0);    
+        glVertex(n_vel_);
+        
+        // Velocities
+        glColor3f(1, 0, 1);
+        glVertex(0);
+        glColor3f(1, 0, 1);    
+        glVertex(t_vel_);
+    }
     glEnd();
+    glColor3f(1, 0, 0);        
+    int num_collisions = collision_points.size();
+    for (int i = 0; i < num_collisions; i++) {
+        glPushMatrix();
+        Vector3f cp = collision_points[i] - center_;
+        glTranslatef(cp[0], cp[1], cp[2]);        
+        glutSolidCube(0.1);
+        glPopMatrix();
+    }
     glEnable(GL_LIGHTING);        
 };
 

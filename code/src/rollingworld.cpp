@@ -19,16 +19,15 @@ float rand_height() {
 
 RollingWorld::RollingWorld() {
     landscape_data_ = vector<vector<float> >();
-    num_rows = 8;
-    num_cols = 8;
-    x_extent = 15;
+    num_rows = 40;
+    num_cols = 20;
+    x_extent = 30;
     z_extent = 15;
     cout << "Creeating rolling world" << endl;
     for (int r = 0; r < num_rows; r++) {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
-            landscape_data_[r].push_back(rand_height());
-            cout << landscape_data_[r][c];
+            landscape_data_[r].push_back(rand_height() - 0.3 * abs(r % (num_rows / 4) - num_rows / 8));
         }
     }
 };
@@ -109,6 +108,7 @@ void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) 
 
     Vector3f normal_v = Vector3f::cross(p3 - p1, p2 - p1).normalized();
     
+    glBegin(GL_TRIANGLES);
     glNormal(normal_v);
     glVertex(p1);
     
@@ -119,6 +119,7 @@ void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) 
     glVertex(p3);
 
     glEnd();
+    /*
     Vector3f cp = closestPtOnTriangle(sphere_c, p1, p2, p3);
     float dist = (cp - sphere_c).abs();
     cout << dist << endl;
@@ -137,8 +138,9 @@ void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) 
     glTranslatef(cp[0], cp[1], cp[2]);
     glutSolidCube(0.1);
     glPopMatrix();
-    glBegin(GL_TRIANGLES);
+    */
 };
+
 
 // Draw the square [r, c] -> [r + 1, c + 1]
 void RollingWorld::drawSquare(int r, int c) {
@@ -159,6 +161,60 @@ void RollingWorld::drawSquare(int r, int c) {
                      r + 1, c);
     }
 };
+
+void RollingWorld::getCollisionsForTriangle(int r1, int c1,
+                                            int r2, int c2,
+                                            int r3, int c3,
+                                            RollingBall* ball,
+                                            vector<Vector3f>* collision_points) {
+    Vector3f p1 = point(r1, c1);
+    Vector3f p2 = point(r2, c2);
+    Vector3f p3 = point(r3, c3);    
+
+    Vector3f cp = closestPtOnTriangle(ball->center_, p1, p2, p3);
+    float dist = (cp - sphere_c).abs();
+    if (dist < ball->radius()) {
+        collision_points->push_back(cp);
+    }
+};
+
+
+
+void RollingWorld::getCollisionsForSquare(int r, int c,
+                                          RollingBall* ball,
+                                          vector<Vector3f>* collision_points) {
+    if ((r + c) % 2 == 0) {
+        getCollisionsForTriangle(r, c,
+                                 r + 1, c,
+                                 r + 1 , c+ 1,
+                                 ball,
+                                 collision_points);
+        getCollisionsForTriangle(r + 1 , c + 1,
+                                 r, c + 1,
+                                 r, c,
+                                 ball,
+                                 collision_points);
+    } else {
+        getCollisionsForTriangle(r + 1, c,
+                                 r + 1, c + 1,
+                                 r , c+ 1,
+                                 ball,
+                                 collision_points);
+        getCollisionsForTriangle(r, c + 1,
+                                 r, c,
+                                 r + 1, c,
+                                 ball,
+                                 collision_points);
+    }
+};
+
+void RollingWorld::getCollisions(RollingBall* ball, vector<Vector3f>* collision_points) {
+    for (int r = 0; r < num_rows - 1; r++) {
+        for (int c = 0; c < num_cols - 1; c++) {
+            getCollisionsForSquare(r, c, ball, collision_points);
+        }
+    }
+}
 
 void RollingWorld::draw() {
     // Save State

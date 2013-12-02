@@ -5,6 +5,7 @@
 #include "Matrix4f.h"
 #include "extra.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class RollingBall {
@@ -20,6 +21,12 @@ class RollingBall {
     float axis_rotation_;
     Vector3f velocity_;
     Vector3f center_;
+
+    Vector3f n_vel_;
+    Vector3f t_vel_;
+
+    vector<Vector3f> collision_points;
+    Vector3f avg_collision;
 
     GLuint loadBMP_custom(const char * imagepath);
     GLuint texture;

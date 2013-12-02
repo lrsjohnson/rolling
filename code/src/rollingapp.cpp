@@ -67,6 +67,12 @@ void RollingApplication::onKeyUp(unsigned key) {
         rolling_sim_->onRight();
     } else if (key == 65364) { // DOWN KEY
         rolling_sim_->onDown();
+    } else if (key == 'q') {
+        rolling_sim_->onUpward();
+    } else if (key == 'a') {
+        rolling_sim_->onDownward();        
+    } else if (key == 'r') {
+        rolling_sim_->onReset();
     }
 };
 

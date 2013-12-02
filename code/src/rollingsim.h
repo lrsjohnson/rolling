@@ -27,6 +27,10 @@ class RollingSimulation {
     void onUp();
     void onRight();
     void onDown();  
+    void onUpward();
+    void onDownward();
+
+    void onReset();    
   
     // Call for the boost runge-kutta stepper
     static void system_func(const system_state_t& x,
@@ -36,6 +40,8 @@ class RollingSimulation {
  private:
     RollingWorld* world_;
     RollingBall* ball_;
+
+    Vector3f gravity_;
     runge_kutta4<system_state_t>* stepper_;
 
     static const float MIN_VELOCITY;
