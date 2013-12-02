@@ -77,7 +77,9 @@ void RollingSimulation::step(float time_step) {
 
         // 3. Account for collision by moving ball up
         Vector3f collision_unit_normal = (avg_collision - ball_->center_).normalized();
-        ball_->velocity_ -= collision_unit_normal * max_penetration;
+        if (max_penetration > 0.05 * ball_->radius()) {
+            ball_->velocity_ -= 1.0 *collision_unit_normal * max_penetration;
+        }
 
         float vel_dot = Vector3f::dot(ball_->velocity_, collision_unit_normal);
         if (vel_dot > 0) {
@@ -87,8 +89,6 @@ void RollingSimulation::step(float time_step) {
             ball_->n_vel_ = Vector3f::ZERO;
             ball_->t_vel_ = ball_->velocity_;
         }
-        
-        
     } else {
         ball_->avg_collision = Vector3f::ZERO;
         ball_->n_vel_ = Vector3f::ZERO;

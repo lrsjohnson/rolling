@@ -19,18 +19,20 @@ float rand_height() {
 
 RollingWorld::RollingWorld() {
     landscape_data_ = vector<vector<float> >();
-    num_rows = 40;
-    num_cols = 20;
+    num_rows = 80;
+    num_cols = 40;
     x_extent = 30;
     z_extent = 15;
     cout << "Creeating rolling world" << endl;
     for (int r = 0; r < num_rows; r++) {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
-            landscape_data_[r].push_back(rand_height() -
-                                         0.3 * abs(r % (num_rows / 4) - num_rows / 8));
+            landscape_data_[r].push_back(0.5 * rand_height() -
+                                         0.15 * abs(r % (num_rows / 4) - num_rows / 8));
         }
     }
+    computeNormals();
+
 };
 
 // Based on calculations from "Real Time Collision Detectino Book"
@@ -98,8 +100,42 @@ Vector3f RollingWorld::point(int r, int c) {
                     c_to_z(c));
 };
 
+void RollingWorld::computeNormals() {
+    normals_.clear();
+    for (int ri = 0; ri < num_rows; ri++) {
+        vector<Vector3f> row_vec;
+	for (int ci = 0; ci < num_cols; ci++) {
+	    int num_neighbors = 0;
+	    Vector3f sum(0, 0, 0);
+	    Vector3f pt = point(ri, ci);
+	    if (ri > 0 && ci > 0) {
+		sum += Vector3f::cross(point(ri - 1, ci) - pt,
+                                       point(ri, ci - 1) - pt);
+		num_neighbors++;
+	    }
+	    if (ri > 0 && ci < num_cols -1) {
+		sum += Vector3f::cross(point(ri, ci + 1) - pt,
+                                       point(ri - 1, ci) - pt);
+		num_neighbors++;
+	    }
+	    if (ri < num_rows - 1 && ci > 0) {
+		sum += Vector3f::cross(point(ri, ci - 1) - pt,
+                                       point(ri + 1, ci) - pt);
+		num_neighbors++;
+	    }
+	    if (ri < num_rows - 1 &&  ci < num_cols -1) {
+		sum += Vector3f::cross(point(ri + 1, ci) - pt,
+                                       point(ri, ci + 1) - pt);
+		num_neighbors++;
+	    }
+	    row_vec.push_back(-sum / ((float) num_neighbors));
+	}
+        normals_.push_back(row_vec);
+    }
+}
+
 Vector3f RollingWorld::normal(int r, int c) {
-    return Vector3f(0, 1, 0);
+    return normals_[r][c];
 };
 
 void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) {
@@ -111,13 +147,13 @@ void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) 
     
     glBegin(GL_TRIANGLES);
     glShadeModel(GL_SMOOTH);
-    glNormal(normal_v);
+    glNormal(normal(r1, c1));
     glVertex(p1);
     
-    glNormal(normal_v);
+    glNormal(normal(r2, c2));
     glVertex(p2);
 
-    glNormal(normal_v);
+    glNormal(normal(r3, c3));
     glVertex(p3);
 
     glEnd();

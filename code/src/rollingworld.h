@@ -16,6 +16,8 @@ class RollingWorld {
     void getCollisions(RollingBall* ball, vector<Vector3f>* collision_points);
     
     Vector3f sphere_c;
+
+    void computeNormals();
  private:
     Vector3f closestPtOnTriangle(Vector3f p, Vector3f a, Vector3f b, Vector3f c);
     
@@ -46,6 +48,7 @@ class RollingWorld {
     int num_cols;
     vector<vector<float> > landscape_data_;
 
+    vector<vector<Vector3f> > normals_;
 };
 
 #endif // ifndef ROLLING_WORLD_H
