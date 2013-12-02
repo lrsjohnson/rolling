@@ -204,6 +204,7 @@ namespace {
 
 int main(int argc, char* argv[]) {
     cout << "Starting main..." << endl;
+    glutInit(&argc, argv);
 
     RollingApplication::Instance()->Init(argc, argv);
 
