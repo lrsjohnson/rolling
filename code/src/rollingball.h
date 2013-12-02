@@ -6,25 +6,25 @@
 
 class RollingBall {
  public:
-  RollingBall(Vector3f center, float r);
-  ~RollingBall();
+    RollingBall(Vector3f center, float r);
+    ~RollingBall();
 
-  void draw();
+    void draw();
 
-  float radius() { return radius_; };
+    float radius() { return radius_; };
 
-  Matrix4f rotation_;
-  float axis_rotation_;
-  Vector3f velocity_;
-  Vector3f center_;
+    Matrix4f rotation_;
+    float axis_rotation_;
+    Vector3f velocity_;
+    Vector3f center_;
   
  private:
-  float radius_;
+    float radius_;
 
 
   
-  static const int RENDER_SLICES;
-  static const int RENDER_STACKS;   
+    static const int RENDER_SLICES;
+    static const int RENDER_STACKS;   
 };
 
 #endif // ROLLING_BALL_H

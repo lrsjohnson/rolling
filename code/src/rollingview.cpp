@@ -27,24 +27,24 @@ RollingView::~RollingView() {
 };
 
 int RollingView::handle( int event ) {
-  unsigned eventCoordX = Fl::event_x();
-  unsigned eventCoordY = Fl::event_y();
-  unsigned eventButton = Fl::event_button();
-  unsigned eventState  = Fl::event_state();
+    unsigned eventCoordX = Fl::event_x();
+    unsigned eventCoordY = Fl::event_y();
+    unsigned eventButton = Fl::event_button();
+    unsigned eventState  = Fl::event_state();
 
-  switch( event ) {
-  case FL_PUSH: RollingApplication::Instance()->onMouseClick(eventButton, eventCoordX, eventCoordY); break;
-  case FL_DRAG: RollingApplication::Instance()->onMouseDrag(eventCoordX, eventCoordY); break;
-  case FL_RELEASE: RollingApplication::Instance()->onMouseRelease(eventCoordX, eventCoordY); break;    
-  case FL_KEYUP: RollingApplication::Instance()->onKeyUp(Fl::event_key()); break;
-  default: return 0;
-  }
-  redraw();
-  return 1;
+    switch( event ) {
+    case FL_PUSH: RollingApplication::Instance()->onMouseClick(eventButton, eventCoordX, eventCoordY); break;
+    case FL_DRAG: RollingApplication::Instance()->onMouseDrag(eventCoordX, eventCoordY); break;
+    case FL_RELEASE: RollingApplication::Instance()->onMouseRelease(eventCoordX, eventCoordY); break;    
+    case FL_KEYUP: RollingApplication::Instance()->onKeyUp(Fl::event_key()); break;
+    default: return 0;
+    }
+    redraw();
+    return 1;
 };
 
 void RollingView::update() {
-  // update model from UI etc.
+    // update model from UI etc.
 };
 
 void RollingView::setupOpenGL() {
@@ -67,10 +67,10 @@ void RollingView::setupOpenGL() {
 }
 
 void RollingView::draw() {
-  if (!valid()) {
-    setupOpenGL();
-  }
-  RollingApplication::Instance()->draw();
+    if (!valid()) {
+        setupOpenGL();
+    }
+    RollingApplication::Instance()->draw();
 };
 
 

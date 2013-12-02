@@ -3,8 +3,8 @@
 
 class RollingWorld {
  public:
-  RollingWorld() {};
-  void draw();
+    RollingWorld() {};
+    void draw();
  private:
 };
 

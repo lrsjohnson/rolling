@@ -99,20 +99,20 @@ namespace {
     void mouseFunc(int button, int state, int x, int y) {
 	cout << "Mouse func" << endl;
 	if (state == GLUT_DOWN) {
-		g_mousePressed = true;
+            g_mousePressed = true;
             
-		switch (button) {
-		case GLUT_LEFT_BUTTON:
-		    camera.MouseClick(Camera::LEFT, x, y);
-		    break;
-		case GLUT_MIDDLE_BUTTON:
-		    camera.MouseClick(Camera::MIDDLE, x, y);
-		    break;
-		case GLUT_RIGHT_BUTTON:
-		    camera.MouseClick(Camera::RIGHT, x,y);
-		default:
-		    break;
-		}                       
+            switch (button) {
+            case GLUT_LEFT_BUTTON:
+                camera.MouseClick(Camera::LEFT, x, y);
+                break;
+            case GLUT_MIDDLE_BUTTON:
+                camera.MouseClick(Camera::MIDDLE, x, y);
+                break;
+            case GLUT_RIGHT_BUTTON:
+                camera.MouseClick(Camera::RIGHT, x,y);
+            default:
+                break;
+            }                       
 	} else {
 	    camera.MouseRelease(x,y);
 	    g_mousePressed = false;
@@ -203,14 +203,14 @@ namespace {
 }
 
 int main(int argc, char* argv[]) {
-  glutInit(&argc, argv);
-  cout << "Starting main..." << endl;
+    glutInit(&argc, argv);
+    cout << "Starting main..." << endl;
   
-  RollingApplication::Instance()->Init(argc, argv);
+    RollingApplication::Instance()->Init(argc, argv);
   
-  int ret = RollingApplication::Instance()->Run();
+    int ret = RollingApplication::Instance()->Run();
   
-  delete RollingApplication::Instance();
+    delete RollingApplication::Instance();
   
-  return ret;
+    return ret;
 }

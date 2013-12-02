@@ -14,7 +14,7 @@
 
 class Camera
 {
-public:
+ public:
 
     Camera();
     
@@ -37,8 +37,8 @@ public:
     // use these instead of 
     void ApplyViewport() const;
     
-	Matrix4f projectionMatrix() const;
-	Matrix4f viewMatrix() const;
+    Matrix4f projectionMatrix() const;
+    Matrix4f viewMatrix() const;
 
     // Set for relevant vars
     void SetCenter(const Vector3f& center);
@@ -50,7 +50,7 @@ public:
     Matrix4f GetRotation() const { return mCurrentRot; }
     float GetDistance() const { return mCurrentDistance; }
     
-private:
+ private:
 
     // States 
     int     mDimensions[2];

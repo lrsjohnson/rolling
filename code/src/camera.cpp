@@ -53,37 +53,37 @@ void Camera::MouseClick(Button button, int x, int y)
 
     mButtonState = button;
     switch (button)
-    {
-    case LEFT:
-        mCurrentRot = mStartRot;
-        break;
-    case MIDDLE:
-        mCurrentCenter = mStartCenter;
-        break;
-    case RIGHT:
-        mCurrentDistance = mStartDistance;
-        break;        
-    default:
-        break;
-    }
+        {
+        case LEFT:
+            mCurrentRot = mStartRot;
+            break;
+        case MIDDLE:
+            mCurrentCenter = mStartCenter;
+            break;
+        case RIGHT:
+            mCurrentDistance = mStartDistance;
+            break;        
+        default:
+            break;
+        }
 }
 
 void Camera::MouseDrag(int x, int y)
 {
     switch (mButtonState)
-    {
-    case LEFT:
-        ArcBallRotation(x,y);
-        break;
-    case MIDDLE:
-        PlaneTranslation(x,y);
-        break;
-    case RIGHT:
-        DistanceZoom(x,y);
-        break;
-    default:
-        break;
-    }
+        {
+        case LEFT:
+            ArcBallRotation(x,y);
+            break;
+        case MIDDLE:
+            PlaneTranslation(x,y);
+            break;
+        case RIGHT:
+            DistanceZoom(x,y);
+            break;
+        default:
+            break;
+        }
 }
 
 
@@ -154,19 +154,19 @@ void Camera::ArcBallRotation(int x, int y)
     dotprod = sx * ex + sy * ey + sz * ez;
 
     if( dotprod != 1 )
-    {
-        Vector3f axis( sy * ez - ey * sz, sz * ex - ez * sx, sx * ey - ex * sy );
-        axis.normalize();
+        {
+            Vector3f axis( sy * ez - ey * sz, sz * ex - ez * sx, sx * ey - ex * sy );
+            axis.normalize();
         
-        float angle = 2.0f * acos( dotprod );
+            float angle = 2.0f * acos( dotprod );
 
-        mCurrentRot = Matrix4f::rotation( axis, angle );
-        mCurrentRot = mCurrentRot * mStartRot;
-    }
+            mCurrentRot = Matrix4f::rotation( axis, angle );
+            mCurrentRot = mCurrentRot * mStartRot;
+        }
     else
-    {
-        mCurrentRot = mStartRot;
-    }
+        {
+            mCurrentRot = mStartRot;
+        }
 
 
 }
@@ -213,36 +213,36 @@ void Camera::ApplyViewport() const
 
 Matrix4f Camera::projectionMatrix() const
 {
-	return Matrix4f::perspectiveProjection
+    return Matrix4f::perspectiveProjection
 	(
-		mPerspective[ 0 ] * M_PI / 180.f, mPerspective[ 1 ],
-		0.1f, 1000.f, false
-	);
+         mPerspective[ 0 ] * M_PI / 180.f, mPerspective[ 1 ],
+         0.1f, 1000.f, false
+         );
 }
 
 Matrix4f Camera::viewMatrix() const
 {
-	// back up distance
-	Matrix4f lookAt = Matrix4f::lookAt
+    // back up distance
+    Matrix4f lookAt = Matrix4f::lookAt
 	(
-		Vector3f( 0, 0, mCurrentDistance ),
-		Vector3f::ZERO,
-		Vector3f::UP
-	);
+         Vector3f( 0, 0, mCurrentDistance ),
+         Vector3f::ZERO,
+         Vector3f::UP
+         );
     
-	return lookAt * mCurrentRot * Matrix4f::translation( -mCurrentCenter );
+    return lookAt * mCurrentRot * Matrix4f::translation( -mCurrentCenter );
 
-	/*
-    gluLookAt(0,0,mCurrentDistance,
-              0,0,0,
-              0.0, 1.0, 0.0);
+    /*
+      gluLookAt(0,0,mCurrentDistance,
+      0,0,0,
+      0.0, 1.0, 0.0);
 
-    // rotate object
-    glMultMatrixf(mCurrentRot);
+      // rotate object
+      glMultMatrixf(mCurrentRot);
 
-    //translate object to center
-    glTranslatef(-mCurrentCenter[0],-mCurrentCenter[1],-mCurrentCenter[2]);    
-	*/
+      //translate object to center
+      glTranslatef(-mCurrentCenter[0],-mCurrentCenter[1],-mCurrentCenter[2]);    
+    */
 }
 
 void Camera::DistanceZoom(int x, int y)
