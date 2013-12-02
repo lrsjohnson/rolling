@@ -19,7 +19,7 @@ RollingView::RollingView(int x,
     camera_->SetDistance(8);
     camera_->SetCenter(Vector3f(0, 0, 0));
     RollingApplication::Instance()->loadCamera(camera_);
-    RollingApplication::Instance()->loadView(this);    
+    RollingApplication::Instance()->loadView(this);
 };
 
 RollingView::~RollingView() {
@@ -63,7 +63,6 @@ void RollingView::setupOpenGL() {
     glLoadIdentity();
     camera_->SetPerspective(50.0f);
     glLoadMatrixf(camera_->projectionMatrix());
-  
 }
 
 void RollingView::draw() {

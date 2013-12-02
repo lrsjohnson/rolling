@@ -60,11 +60,11 @@ void RollingApplication::onKeyUp(unsigned key) {
         }
     } else if (key == 65361) { // LEFT KEY
         rolling_sim_->onLeft();
-    } else if (key == 65362) { // LEFT KEY
+    } else if (key == 65362) { // UP KEY
         rolling_sim_->onUp();
-    } else if (key == 65363) { // LEFT KEY
+    } else if (key == 65363) { // RIGHT KEY
         rolling_sim_->onRight();
-    } else if (key == 65364) { // LEFT KEY
+    } else if (key == 65364) { // DOWN KEY
         rolling_sim_->onDown();
     }
 };
@@ -183,7 +183,7 @@ void RollingApplication::onTick() {
     rolling_sim_->step(FPS);
 };
 
-void RollingApplication::timer_callback(void* userdata) {
+void RollingApplication::timer_callback(void* userdata) { // static
     RollingApplication* o = (RollingApplication*) userdata;
     // Do something
     o->onTick();  
