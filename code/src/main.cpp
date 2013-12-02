@@ -203,14 +203,14 @@ namespace {
 }
 
 int main(int argc, char* argv[]) {
-    glutInit(&argc, argv);
     cout << "Starting main..." << endl;
-  
+    glutInit(&argc, argv);
+
     RollingApplication::Instance()->Init(argc, argv);
-  
+
     int ret = RollingApplication::Instance()->Run();
-  
+
     delete RollingApplication::Instance();
-  
+
     return ret;
 }
