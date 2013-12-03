@@ -54,23 +54,15 @@ void RollingApplication::loadView(RollingView* view) {
 void RollingApplication::onKeyUp(unsigned key) {
     cout << "Released key num " << key << "." << endl;
     if (key == 32) {
-        if (!timer_running_) {
-            startTimer();
-        } else {
-            stopTimer();
-        }
-    } else if (key == 65361) { // LEFT KEY
+        rolling_sim_->external_vel[1] = 0; // jump
+    } else if (key == 65361 || key == 'a') { // LEFT KEY
         rolling_sim_->external_vel[0] = 0;
-    } else if (key == 65362) { // UP KEY
+    } else if (key == 65362 || key == 'w') { // UP KEY
         rolling_sim_->external_vel[2] = 0;
-    } else if (key == 65363) { // RIGHT KEY
+    } else if (key == 65363 || key == 'd') { // RIGHT KEY
         rolling_sim_->external_vel[0] = 0;
-    } else if (key == 65364) { // DOWN KEY
+    } else if (key == 65364 || key == 's') { // DOWN KEY
         rolling_sim_->external_vel[2] = 0;
-    } else if (key == 'q') {
-        rolling_sim_->external_vel[1] = 0;
-    } else if (key == 'a') {
-        rolling_sim_->external_vel[1] = 0;
     } else if (key == 'r') {
         rolling_sim_->onReset();
     }
@@ -78,18 +70,16 @@ void RollingApplication::onKeyUp(unsigned key) {
 
 void RollingApplication::onKeyDown(unsigned key) {
     cout << "Pressed key num " << key << "." << endl;
-if (key == 65361) { // LEFT KEY
-        rolling_sim_->external_vel[0] = -1;
-    } else if (key == 65362) { // UP KEY
-        rolling_sim_->external_vel[2] = -1;
-    } else if (key == 65363) { // RIGHT KEY
-        rolling_sim_->external_vel[0] = 1;
-    } else if (key == 65364) { // DOWN KEY
-        rolling_sim_->external_vel[2] = 1;
-    } else if (key == 'q') {
+    if (key == 32) {
         rolling_sim_->external_vel[1] = 1;
-    } else if (key == 'a') {
-        rolling_sim_->external_vel[1] = -1;
+    } else if (key == 65361 || key == 'a') { // LEFT KEY
+        rolling_sim_->external_vel[0] = -1;
+    } else if (key == 65362 || key == 'w') { // UP KEY
+        rolling_sim_->external_vel[2] = -1;
+    } else if (key == 65363 || key == 'd') { // RIGHT KEY
+        rolling_sim_->external_vel[0] = 1;
+    } else if (key == 65364 || key == 's') { // DOWN KEY
+        rolling_sim_->external_vel[2] = 1;
     }
 };
 

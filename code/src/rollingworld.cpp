@@ -19,16 +19,16 @@ float rand_height() {
 
 RollingWorld::RollingWorld() {
     landscape_data_ = vector<vector<float> >();
-    num_rows = 80;
-    num_cols = 40;
+    num_rows = 40;
+    num_cols = 20;
     x_extent = 30;
     z_extent = 15;
     cout << "Creeating rolling world" << endl;
     for (int r = 0; r < num_rows; r++) {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
-            landscape_data_[r].push_back(0.5 * rand_height() -
-                                         0.15 * abs(r % (num_rows / 4) - num_rows / 8));
+            landscape_data_[r].push_back(1.0 * rand_height() -
+                                         0.3 * abs(r % (num_rows / 4) - num_rows / 8));
         }
     }
     computeNormals();
@@ -147,13 +147,14 @@ void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) 
     
     glBegin(GL_TRIANGLES);
     glShadeModel(GL_SMOOTH);
-    glNormal(normal(r1, c1));
+    glNormal(normal_v);
+    //    glNormal(normal(r1, c1));
     glVertex(p1);
     
-    glNormal(normal(r2, c2));
+    //    glNormal(normal(r2, c2));
     glVertex(p2);
 
-    glNormal(normal(r3, c3));
+    //    glNormal(normal(r3, c3));
     glVertex(p3);
 
     glEnd();
@@ -211,7 +212,7 @@ void RollingWorld::getCollisionsForTriangle(int r1, int c1,
 
     Vector3f cp = closestPtOnTriangle(ball->center_, p1, p2, p3);
     float dist = (cp - sphere_c).abs();
-    if (dist < ball->radius()) {
+    if (dist < ball->radius() * 1.05) {
         collision_points->push_back(cp);
     }
 };

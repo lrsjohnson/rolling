@@ -23,6 +23,8 @@ RollingBall::RollingBall(Vector3f center, float r) {
 
     textureFileName = "worldmap.bmp";
     textureActive = false;
+
+    last_rotation_delta = Matrix4f::identity();
 };
 
 RollingBall::~RollingBall() {

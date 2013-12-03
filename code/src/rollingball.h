@@ -32,6 +32,8 @@ class RollingBall {
     GLuint texture;
     GLuint getTextureName();
 
+    Matrix4f last_rotation_delta;
+
   private:
     float radius_;
     GLuint textureName;

@@ -15,7 +15,7 @@ RollingSimulation::RollingSimulation() {
     ball_ = new RollingBall(Vector3f(0, 2.0, 0), 1.0);
     stepper_ = new runge_kutta4<system_state_t>();
 
-    gravity_ = Vector3f(0, -10, 0);
+    gravity_ = Vector3f(0, -40, 0);
 };
 
 RollingSimulation::~RollingSimulation() {
@@ -44,42 +44,47 @@ void RollingSimulation::setState(system_state_t state) {
 const float RollingSimulation::MIN_VELOCITY = 0.001;
 
 void RollingSimulation::step(float time_step) {
-    // 1. update velocities
 
-    
-    // dampening/friction
-    ball_->velocity_ *= 0.95;
-    ball_->velocity_ += time_step * gravity_;
-
-    external_vel.print();
-    ball_->velocity_ += time_step * 12 * external_vel;    
-
-    // 2. detect collisions; adjust/project velocities to correct direction
+    // 1. detect collisions; adjust/project velocities to correct direction
     vector<Vector3f> collision_points;
     world_->getCollisions(ball_, &collision_points);
 
     ball_->collision_points = collision_points;
 
+    // 2. update velocities
+
+    // dampening/friction
+    ball_->velocity_ *= 0.95;
+    ball_->velocity_ += time_step * gravity_;
+
+    external_vel.print();
+
+
     
+    ball_->velocity_ += time_step * 30 * Vector3f(external_vel[0], 0, external_vel[2]);
     if (collision_points.size() > 0) {
+        // Jump
+        ball_->velocity_ += time_step * 500 * Vector3f(0, external_vel[1], 0);
         Vector3f avg_collision = Vector3f::ZERO;
         int num_collisions = collision_points.size();
         float max_penetration = 0;
+        int num_collisions_in_v_direction = 0;
         for (int i = 0; i < num_collisions; i++) {
-            avg_collision += collision_points[i];
-            float penetration_dist = ball_->radius()*1.1 - (collision_points[i] - ball_->center_).abs();
-            if (penetration_dist > max_penetration) {
-                max_penetration = penetration_dist;
+            Vector3f v_center_to_collision = (collision_points[i] - ball_->center_);
+            if (Vector3f::dot(v_center_to_collision, ball_->velocity_) > 0) {
+                avg_collision += collision_points[i];
+                num_collisions_in_v_direction++;
+                float penetration_dist = ball_->radius()*1.1 - v_center_to_collision.abs();
+                if (penetration_dist > max_penetration) {
+                    max_penetration = penetration_dist;
+                }
             }
         }
-        avg_collision =  avg_collision / (1.0f * num_collisions);
+        avg_collision =  avg_collision / (1.0f * num_collisions_in_v_direction);
         ball_->avg_collision = avg_collision - ball_->center_;
 
         // 3. Account for collision by moving ball up
         Vector3f collision_unit_normal = (avg_collision - ball_->center_).normalized();
-        if (max_penetration > 0.05 * ball_->radius()) {
-            ball_->velocity_ -= 1.0 *collision_unit_normal * max_penetration;
-        }
 
         float vel_dot = Vector3f::dot(ball_->velocity_, collision_unit_normal);
         if (vel_dot > 0) {
@@ -88,6 +93,9 @@ void RollingSimulation::step(float time_step) {
         } else {
             ball_->n_vel_ = Vector3f::ZERO;
             ball_->t_vel_ = ball_->velocity_;
+        }
+        if (max_penetration > 0.1 * ball_->radius()) {
+            ball_->t_vel_ -= 1 *collision_unit_normal * max_penetration;
         }
     } else {
         ball_->avg_collision = Vector3f::ZERO;
@@ -116,7 +124,11 @@ void RollingSimulation::step(float time_step) {
     float radians_moved = dist_traveled / ball_->radius();
 
     if (rotation_axis.abs() > 0) {
-        ball_->rotation_ = Matrix4f::rotation(rotation_axis, radians_moved) * ball_->rotation_;
+        Matrix4f rotation_delta = Matrix4f::rotation(rotation_axis, radians_moved);
+        ball_->rotation_ = rotation_delta * ball_->rotation_;
+        ball_->last_rotation_delta = rotation_delta;
+    } else {
+        ball_->rotation_ = ball_->last_rotation_delta * ball_->rotation_;
     }
     // Old, via stepper:
     //  system_state_t out(2);
