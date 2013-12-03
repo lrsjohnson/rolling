@@ -41,7 +41,7 @@ void RollingSimulation::setState(system_state_t state) {
     //  ball_->rotation = state[0];
 };
 
-const float RollingSimulation::MIN_VELOCITY = 0.001;
+const float RollingSimulation::MIN_VELOCITY = 0.28;
 
 void RollingSimulation::step(float time_step) {
 
@@ -57,10 +57,6 @@ void RollingSimulation::step(float time_step) {
     ball_->velocity_ *= 0.95;
     ball_->velocity_ += time_step * gravity_;
 
-    external_vel.print();
-
-
-    
     ball_->velocity_ += time_step * 30 * Vector3f(external_vel[0], 0, external_vel[2]);
     if (collision_points.size() > 0) {
         // Jump
@@ -97,6 +93,11 @@ void RollingSimulation::step(float time_step) {
         if (max_penetration > 0.1 * ball_->radius()) {
             ball_->t_vel_ -= 1 *collision_unit_normal * max_penetration;
         }
+        cout << ball_->n_vel_.abs() << endl;
+        if (ball_->n_vel_.abs() > 3) {
+            ball_->t_vel_ -= (ball_->n_vel_.abs() - 3.0)/10.0 * ball_->n_vel_;
+        }
+        
     } else {
         ball_->avg_collision = Vector3f::ZERO;
         ball_->n_vel_ = Vector3f::ZERO;
@@ -106,7 +107,8 @@ void RollingSimulation::step(float time_step) {
         
     // 4. move ball, apply rotation
     if (ball_->t_vel_.abs() < MIN_VELOCITY) {
-        ball_->t_vel_ = Vector3f::ZERO;
+        ball_->t_vel_ = ball_->t_vel_ * 0.2;
+        ball_->velocity_ = ball_->t_vel_;
         return;
     }
 
