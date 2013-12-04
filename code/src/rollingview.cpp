@@ -16,7 +16,7 @@ RollingView::RollingView(int x,
 
     // Setup camera!
     camera_->SetDimensions(w, h);
-    camera_->SetDistance(11);
+    camera_->SetDistance(30);
     camera_->SetCenter(Vector3f(0, 0, 0));
     camera_->SetRotation(Matrix4f::rotation(Vector3f(1, 0, 0), M_PI / 5.0));
     RollingApplication::Instance()->loadCamera(camera_);

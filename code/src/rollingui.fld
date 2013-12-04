@@ -8,16 +8,16 @@ class RollingUI {open
   } {
     Fl_Window window {
       label {Rolling Sphere} open
-      xywh {957 107 775 596} type Double resizable visible
+      xywh {319 44 1101 816} type Double hide resizable
     } {
       Fl_Box scene_view {
         label {OpenGL View}
-        xywh {0 52 775 516} box BORDER_BOX color 0 labelcolor 55 resizable
+        xywh {0 52 1100 739} box BORDER_BOX color 0 labelcolor 55 resizable
         code0 {\#include "RollingView.h"}
         class RollingView
       }
       Fl_Menu_Bar {} {open
-        xywh {0 0 775 25} box BORDER_BOX
+        xywh {0 0 1100 25} box BORDER_BOX
       } {
         Submenu file_menu {
           label File open
@@ -30,7 +30,7 @@ class RollingUI {open
         }
       }
       Fl_Group status_bar {open
-        xywh {0 570 775 25} box BORDER_BOX
+        xywh {0 790 1100 25} box BORDER_BOX
       } {}
     }
   }
