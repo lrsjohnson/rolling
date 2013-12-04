@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#define DEBUG_SPHERE false
+#define DEBUG_SPHERE true
 
 const int RollingBall::RENDER_SLICES = 20;
 const int RollingBall::RENDER_STACKS = 15;
@@ -97,10 +97,12 @@ void RollingBall::drawDebugSphere() {
 
     if (avg_collision.abs() > 0) {
         // Avg collision
+        /*
         glColor3f(0, 1, 0);
         glVertex(0);
         glColor3f(0, 1, 0);    
         glVertex(avg_collision - center_);
+        */
 
         // Velocities
         glColor3f(1, 1, 0);

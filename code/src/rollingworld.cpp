@@ -27,9 +27,10 @@ RollingWorld::RollingWorld() {
     for (int r = 0; r < num_rows; r++) {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
-            landscape_data_[r].push_back(0.9 * rand_height() -
-                                         0.25 * abs(r % (num_rows / 8) - num_rows / 16) -
-                                         0.1 * abs((r + c) % (num_cols / 4) - num_cols / 8));
+            landscape_data_[r].push_back(0.4 * rand_height() -
+                                         0.65 * (sin(r /16.0 * 2 * M_PI)) -
+                                         0.8 * (sin((r + c) / 40.0 * 2 * M_PI))
+                                         - 0.25 * (r - 0.6 * abs(c - num_cols / 2.0)));
         }
     }
     computeNormals();
@@ -105,9 +106,13 @@ float RollingWorld::c_to_z(int c) {
     return (-0.5 + c/((float) num_cols)) * z_extent;    
 };
 
+float RollingWorld::height(int r, int c) {
+    return landscape_data_[r][c];
+};
+
 Vector3f RollingWorld::point(int r, int c) {
     return Vector3f(r_to_x(r),
-                    landscape_data_[r][c],
+                    height(r, c),
                     c_to_z(c));
 };
 
@@ -233,6 +238,16 @@ void RollingWorld::getCollisionsForTriangle(int r1, int c1,
 void RollingWorld::getCollisionsForSquare(int r, int c,
                                           RollingBall* ball,
                                           vector<Vector3f>* collision_points) {
+    float ball_y = ball->center_.y();
+    if (!((height(r,c) - ball_y < 0) ||
+          (height(r + 1, c + 1) - ball_y < 0) ||
+          (height(r + 1, c) - ball_y < 0) ||
+          (height(r, c + 1) - ball_y < 0))) {
+        // square can't possibly intersect..
+        return;
+    }
+            
+
     if ((r + c) % 2 == 0) {
         getCollisionsForTriangle(r, c,
                                  r + 1, c,
@@ -266,10 +281,10 @@ void RollingWorld::getCollisions(RollingBall* ball, vector<Vector3f>* collision_
     float center_z = ball->center_.z();
 
     int min_r = max(x_to_r(center_x - radius) - COLLISION_CELL_PADDING, 0);
-    int max_r = max(x_to_r(center_x - radius) + COLLISION_CELL_PADDING, num_rows - 1);
+    int max_r = min(x_to_r(center_x + radius) + COLLISION_CELL_PADDING, num_rows - 1);
 
     int min_c = max(z_to_c(center_z - radius) - COLLISION_CELL_PADDING, 0);
-    int max_c = max(z_to_c(center_z - radius) + COLLISION_CELL_PADDING, num_cols - 1);    
+    int max_c = min(z_to_c(center_z + radius) + COLLISION_CELL_PADDING, num_cols - 1);    
 
     
     for (int r = min_r; r < max_r; r++) {
@@ -292,6 +307,20 @@ void RollingWorld::draw() {
             drawSquare(r, c);
         }
     }
+
+    for (int r = 0; r < num_rows; r += num_rows/5) {
+        for (int c = 0; c < num_cols; c +=num_cols/5) {
+            int x = r_to_x(r);
+            int z = c_to_z(c);
+            glPushMatrix();
+            glTranslatef(x, 0, z);
+            glScaled(1, 100, 1);
+            glutSolidCube(1);
+            glPopMatrix();
+        }
+    }
+    
+    
 
     glEnd();
 

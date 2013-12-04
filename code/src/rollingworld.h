@@ -14,6 +14,8 @@ class RollingWorld {
     void draw();
 
     void getCollisions(RollingBall* ball, vector<Vector3f>* collision_points);
+
+    float height(int r, int c);
     
     Vector3f sphere_c;
 
