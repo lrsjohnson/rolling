@@ -28,7 +28,7 @@ RollingWorld::RollingWorld() {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
             landscape_data_[r].push_back(0.4 * rand_height() -
-                                         0.65 * (sin(r /16.0 * 2 * M_PI)) -
+                                         0.6 * (sin(r /16.0 * 2 * M_PI)) -
                                          0.8 * (sin((r + c) / 40.0 * 2 * M_PI))
                                          - 0.25 * (r - 0.6 * abs(c - num_cols / 2.0)));
         }

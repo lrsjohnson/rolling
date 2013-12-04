@@ -167,8 +167,6 @@ void Camera::ArcBallRotation(int x, int y)
         {
             mCurrentRot = mStartRot;
         }
-
-
 }
 
 void Camera::PlaneTranslation(int x, int y)
@@ -222,13 +220,15 @@ Matrix4f Camera::projectionMatrix() const
 
 Matrix4f Camera::viewMatrix() const
 {
+
+    Vector4f eye =  Vector4f(0, 0, mCurrentDistance, 1);
+    
     // back up distance
-    Matrix4f lookAt = Matrix4f::lookAt
-	(
-         Vector3f( 0, 0, mCurrentDistance ),
-         Vector3f::ZERO,
-         Vector3f::UP
-         );
+    Matrix4f lookAt = Matrix4f::lookAt(eye.xyz(),
+                                       Vector3f::ZERO,
+                                       Vector3f::UP
+                                       );
+
     
     return lookAt * mCurrentRot * Matrix4f::translation( -mCurrentCenter );
 
