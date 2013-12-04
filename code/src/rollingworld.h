@@ -23,7 +23,10 @@ class RollingWorld {
     
     Vector3f point(int r, int c);
     float r_to_x(int r);
-    float c_to_z(int z);
+    float c_to_z(int c);
+    
+    int x_to_r(float x);
+    int z_to_c(float z);
 
     Vector3f normal(int r, int c);
     
@@ -49,6 +52,8 @@ class RollingWorld {
     vector<vector<float> > landscape_data_;
 
     vector<vector<Vector3f> > normals_;
+
+    static const int COLLISION_CELL_PADDING;
 };
 
 #endif // ifndef ROLLING_WORLD_H

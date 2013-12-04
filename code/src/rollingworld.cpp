@@ -19,16 +19,17 @@ float rand_height() {
 
 RollingWorld::RollingWorld() {
     landscape_data_ = vector<vector<float> >();
-    num_rows = 40;
-    num_cols = 20;
-    x_extent = 30;
-    z_extent = 15;
+    num_rows = 180;
+    num_cols = 180;
+    x_extent = 120;
+    z_extent = 120;
     cout << "Creeating rolling world" << endl;
     for (int r = 0; r < num_rows; r++) {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
-            landscape_data_[r].push_back(1.0 * rand_height() -
-                                         0.3 * abs(r % (num_rows / 4) - num_rows / 8));
+            landscape_data_[r].push_back(0.9 * rand_height() -
+                                         0.25 * abs(r % (num_rows / 8) - num_rows / 16) -
+                                         0.1 * abs((r + c) % (num_cols / 4) - num_cols / 8));
         }
     }
     computeNormals();
@@ -85,6 +86,16 @@ Vector3f RollingWorld::closestPtOnTriangle(Vector3f p, Vector3f a, Vector3f b, V
     float w = vc * denom;
     return a + ab * v + ac * w; //=u*a+v*b+w*c,u=va*denom=1.0f-v-w
 };
+
+int RollingWorld::x_to_r(float x) {
+    return (int) num_rows * (x / x_extent + 0.5);
+};
+
+int RollingWorld::z_to_c(float z) {
+    return (int) num_cols * (z / z_extent + 0.5);
+};
+
+
 
 float RollingWorld::r_to_x(int r) {
     return (-0.5 + r/((float) num_rows)) * x_extent;
@@ -247,9 +258,22 @@ void RollingWorld::getCollisionsForSquare(int r, int c,
     }
 };
 
+const int RollingWorld::COLLISION_CELL_PADDING = 2;
+
 void RollingWorld::getCollisions(RollingBall* ball, vector<Vector3f>* collision_points) {
-    for (int r = 0; r < num_rows - 1; r++) {
-        for (int c = 0; c < num_cols - 1; c++) {
+    float radius = ball->radius();
+    float center_x = ball->center_.x();
+    float center_z = ball->center_.z();
+
+    int min_r = max(x_to_r(center_x - radius) - COLLISION_CELL_PADDING, 0);
+    int max_r = max(x_to_r(center_x - radius) + COLLISION_CELL_PADDING, num_rows - 1);
+
+    int min_c = max(z_to_c(center_z - radius) - COLLISION_CELL_PADDING, 0);
+    int max_c = max(z_to_c(center_z - radius) + COLLISION_CELL_PADDING, num_cols - 1);    
+
+    
+    for (int r = min_r; r < max_r; r++) {
+        for (int c = min_c; c < max_c; c++) {
             getCollisionsForSquare(r, c, ball, collision_points);
         }
     }

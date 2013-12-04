@@ -39,9 +39,9 @@ class RollingSimulation {
 
     Vector3f projected_external_vel;    
     Vector3f external_vel;
+    RollingBall* ball_;
  private:
     RollingWorld* world_;
-    RollingBall* ball_;
 
     Vector3f gravity_;
     runge_kutta4<system_state_t>* stepper_;

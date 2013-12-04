@@ -210,8 +210,17 @@ void RollingApplication::onTick() {
     rolling_sim_->projected_external_vel[1] = rolling_sim_->external_vel[1];
 
     // Step the simulation
+
+    Vector3f old_ball_center = rolling_sim_->ball_->center_;
     
     rolling_sim_->step(FPS);
+
+    Vector3f ball_delta = rolling_sim_->ball_->center_ - old_ball_center;
+    // Only do x translation
+    ball_delta[1] *= 0.5;
+    delta_for_camera += ball_delta;
+    camera_ref_->SetCenter(camera_ref_->GetCenter() + delta_for_camera * 0.25);
+    delta_for_camera = 0.75 * delta_for_camera;
 };
 
 void RollingApplication::timer_callback(void* userdata) { // static

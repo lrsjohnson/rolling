@@ -43,6 +43,8 @@ class RollingApplication {
 
     inline bool timer_running() { return timer_running_; };
 
+    Vector3f delta_for_camera;
+
  private:
     // Singleton instance
     static RollingApplication* instance_;
@@ -63,7 +65,6 @@ class RollingApplication {
     Camera* camera_ref_;
     RollingView* view_ref_;
 
-    
     float x;
 };
  
