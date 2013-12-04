@@ -37,6 +37,7 @@ class RollingSimulation {
                             system_state_t& dxdt,
                             const double t);
 
+    Vector3f projected_external_vel;    
     Vector3f external_vel;
  private:
     RollingWorld* world_;

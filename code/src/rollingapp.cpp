@@ -195,6 +195,22 @@ void RollingApplication::onTick() {
       float time_step = diff_tv.tv_sec + diff_tv.tv_usec / 1000000.0;
       last_tick_tv_ = now_tv;
     */
+
+    
+    // Update external velocity based on camera direction
+    Matrix4f camera_rotation = camera_ref_->GetRotation().inverse();
+    Vector4f external_vel = Vector4f(rolling_sim_->external_vel, 0);
+    external_vel[1] = 0;
+    Vector3f rotated_vel = (camera_rotation * external_vel).xyz();
+    rotated_vel[1] = 0; // Ignore vertical velocity
+    if (rotated_vel.abs() > 0) {
+        rotated_vel = rotated_vel.normalized();
+    }
+    rolling_sim_->projected_external_vel = rotated_vel;
+    rolling_sim_->projected_external_vel[1] = rolling_sim_->external_vel[1];
+
+    // Step the simulation
+    
     rolling_sim_->step(FPS);
 };
 

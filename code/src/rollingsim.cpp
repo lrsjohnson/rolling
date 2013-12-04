@@ -57,10 +57,10 @@ void RollingSimulation::step(float time_step) {
     ball_->velocity_ *= 0.95;
     ball_->velocity_ += time_step * gravity_;
 
-    ball_->velocity_ += time_step * 30 * Vector3f(external_vel[0], 0, external_vel[2]);
+    ball_->velocity_ += time_step * 30 * Vector3f(projected_external_vel[0], 0, projected_external_vel[2]);
     if (collision_points.size() > 0) {
         // Jump
-        ball_->velocity_ += time_step * 500 * Vector3f(0, external_vel[1], 0);
+        ball_->velocity_ += time_step * 500 * Vector3f(0, projected_external_vel[1], 0);
         Vector3f avg_collision = Vector3f::ZERO;
         int num_collisions = collision_points.size();
         float max_penetration = 0;
@@ -95,7 +95,7 @@ void RollingSimulation::step(float time_step) {
         }
         cout << ball_->n_vel_.abs() << endl;
         if (ball_->n_vel_.abs() > 3) {
-            ball_->t_vel_ -= (ball_->n_vel_.abs() - 3.0)/10.0 * ball_->n_vel_;
+            ball_->t_vel_ -= min(ball_->n_vel_.abs() - 3.0, 5.0) * ball_->n_vel_.normalized();
         }
         
     } else {
