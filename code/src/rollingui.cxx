@@ -44363,25 +44363,19 @@ RollingUI::RollingUI() {
         o->down_box(FL_BORDER_BOX);
         o->menu(menu_1);
       } // Fl_Choice* o
-      { Fl_Group* o = new Fl_Group(200, 320, 320, 220);
-        o->end();
-        Fl_Group::current()->resizable(o);
-      } // Fl_Group* o
       splash->end();
     } // Fl_Group* splash
-    { Fl_Group* o = new Fl_Group(0, 26, 170, 28);
-      o->box(FL_FLAT_BOX);
-      o->color(FL_LIGHT3);
-      o->end();
-    } // Fl_Group* o
-    { Fl_Button* o = new Fl_Button(3, 30, 63, 20, "Mode:");
-      o->box(FL_NO_BOX);
-    } // Fl_Button* o
-    { mode_display = new Fl_Group(43, 30, 15, 20, "CAMERA");
-      mode_display->labelfont(1);
-      mode_display->align(Fl_Align(FL_ALIGN_RIGHT));
-      mode_display->end();
-    } // Fl_Group* mode_display
+    { mode_group = new Fl_Group(3, 30, 142, 25);
+      { Fl_Button* o = new Fl_Button(3, 30, 57, 25, "Mode:");
+        o->box(FL_NO_BOX);
+      } // Fl_Button* o
+      { mode_display = new Fl_Group(43, 30, 15, 25, "CAMERA");
+        mode_display->labelfont(1);
+        mode_display->align(Fl_Align(FL_ALIGN_RIGHT));
+        mode_display->end();
+      } // Fl_Group* mode_display
+      mode_group->end();
+    } // Fl_Group* mode_group
     window->end();
   } // Fl_Double_Window* window
 }

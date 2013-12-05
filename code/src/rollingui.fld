@@ -8,7 +8,7 @@ class RollingUI {open
   } {
     Fl_Window window {
       label {Rolling Sphere} open
-      xywh {324 44 1101 816} type Double resizable visible
+      xywh {430 130 1101 816} type Double resizable visible
     } {
       Fl_Group back {open
         xywh {0 55 1105 735} box FLAT_BOX color 32
@@ -16,7 +16,7 @@ class RollingUI {open
       Fl_Box scene_view {
         label {OpenGL View}
         xywh {0 52 1100 739} box BORDER_BOX color 0 labelcolor 55 hide resizable
-        code0 {\#include "RollingView.h"}
+        code0 {\#include "rollingview.h"}
         class RollingView
       }
       Fl_Menu_Bar {} {open
@@ -35,7 +35,7 @@ class RollingUI {open
       Fl_Group status_bar {open
         xywh {0 790 1100 25} box BORDER_BOX
       } {}
-      Fl_Group splash {open selected
+      Fl_Group splash {open
         image {../../slides/Splash-01.png} xywh {140 295 800 275} align 513
       } {
         Fl_Button {} {
@@ -64,17 +64,18 @@ scene_view->take_focus();}
           }
         }
       }
-      Fl_Group {} {open
-        xywh {0 26 170 28} box FLAT_BOX color 54
-      } {}
-      Fl_Button {} {
-        label {Mode:}
-        xywh {3 30 63 20} box NO_BOX
+      Fl_Group mode_group {open selected
+        xywh {3 30 167 25}
+      } {
+        Fl_Button {} {
+          label {Mode:}
+          xywh {3 30 57 25} box NO_BOX
+        }
+        Fl_Group mode_display {
+          label CAMERA open
+          xywh {43 30 15 25} labelfont 1 align 8
+        } {}
       }
-      Fl_Group mode_display {
-        label CAMERA open
-        xywh {43 30 15 20} labelfont 1 align 8
-      } {}
     }
   }
   Function {show()} {open

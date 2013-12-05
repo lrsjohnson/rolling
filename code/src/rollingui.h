@@ -26,6 +26,7 @@ private:
   static void cb_Start(Fl_Button*, void*);
   static Fl_Menu_Item menu_1[];
 public:
+  Fl_Group *mode_group;
   Fl_Group *mode_display;
   void show();
 };
