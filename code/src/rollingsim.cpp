@@ -38,6 +38,11 @@ void RollingSimulation::draw(Vector3f clickedPoint) {
     world_->handleClick(clickedPoint);
 };
 
+void RollingSimulation::handleClick(bool leftClick) {
+    world_->distanceLandRise = 1;
+    world_->landRiseUp = leftClick;
+};
+
 RollingSimulation::system_state_t RollingSimulation::getState() {
     vector<double> state;
     //  state.push_back(ball_->rotation);
