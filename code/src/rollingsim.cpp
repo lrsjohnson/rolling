@@ -25,7 +25,10 @@ RollingSimulation::~RollingSimulation() {
     delete stepper_;
 };
 
-void RollingSimulation::draw(Vector3f clickedPoint) {
+void RollingSimulation::draw(Vector3f clickedPoint, bool terraforming) {
+    if (terraforming) {
+        world_->terraform(clickedPoint);
+    }
     world_->sphere_c = ball_->center_;
     world_->draw();
     ball_->draw();
@@ -35,7 +38,6 @@ void RollingSimulation::draw(Vector3f clickedPoint) {
     glTranslatef(clickedPoint[0], clickedPoint[1], clickedPoint[2]);
     glutSolidCube(1);
     glPopMatrix();
-    world_->handleClick(clickedPoint);
 };
 
 void RollingSimulation::handleClick(bool leftClick) {

@@ -78,6 +78,9 @@ void RollingApplication::onKeyUp(unsigned key) {
         camera_ref_->SetCenter(newCenter);
     } else if (key == 65289) {
         camera_mode_ = !camera_mode_;
+        if (camera_mode_) {
+            camera_ref_->setLastClicked(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
+        }
         updateMode();
     } else if (key == 'c') {
         camera_mode_ = false;
@@ -103,6 +106,7 @@ void RollingApplication::onKeyDown(unsigned key) {
         rolling_sim_->external_vel[2] = 1;
     } else if (key == 'c') {
         camera_mode_ = true;
+        camera_ref_->setLastClicked(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
         updateMode();
     } 
 };
@@ -121,18 +125,26 @@ void RollingApplication::onMouseClick(unsigned button, int x, int y) {
     } else {
         camera_ref_->setLastClicked(x, y);
         rolling_sim_->handleClick(button == FL_LEFT_MOUSE);
+        terraforming_ = true;
     }
 };
 
 void RollingApplication::onMouseMove(int x, int y) {
+    if (!terraforming_ && !camera_mode_) {
+        camera_ref_->setLastClicked(x, y);
+    }
 };
 
 void RollingApplication::onMouseDrag(int x, int y) {
     camera_ref_->MouseDrag(x, y);
+    if (!camera_mode_) {
+        camera_ref_->setLastClicked(x, y);
+    }
 };
 
 void RollingApplication::onMouseRelease(int x, int y) {
-    camera_ref_->MouseRelease(x, y);  
+    camera_ref_->MouseRelease(x, y);
+    terraforming_ = false;
 };
 
 /* Draw scene */
@@ -161,7 +173,7 @@ void RollingApplication::draw() {
     glLoadMatrixf(camera_ref_->viewMatrix());
   
     // Draw the scene
-    rolling_sim_->draw(camera_ref_->lastClicked);
+    rolling_sim_->draw(camera_ref_->lastClicked, terraforming_);
 
     // Maybe draw the axes
     //  drawAxes();

@@ -51,6 +51,7 @@ class RollingApplication {
 
  private:
     bool camera_mode_;
+    bool terraforming_;
 
     // Singleton instance
     static RollingApplication* instance_;
