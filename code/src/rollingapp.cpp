@@ -134,6 +134,11 @@ void RollingApplication::draw() {
   
     // Draw the scene
     rolling_sim_->draw();
+    glPushMatrix();
+    Vector3f clickedPoint = camera_ref_->lastClicked;
+    glTranslatef(clickedPoint[0], clickedPoint[1], clickedPoint[2]);
+    glutSolidCube(1);
+    glPopMatrix();
 
     // Maybe draw the axes
     //  drawAxes();

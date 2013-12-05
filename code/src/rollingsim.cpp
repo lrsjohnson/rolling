@@ -93,7 +93,7 @@ void RollingSimulation::step(float time_step) {
         if (max_penetration > 0.1 * ball_->radius()) {
             ball_->t_vel_ -= 1 *collision_unit_normal * max_penetration;
         }
-        cout << ball_->n_vel_.abs() << endl;
+        //cout << ball_->n_vel_.abs() << endl;
         if (ball_->n_vel_.abs() > 3) {
             ball_->t_vel_ -= min(ball_->n_vel_.abs() - 3.0, 5.0) * ball_->n_vel_.normalized();
         }

@@ -9,6 +9,7 @@ Camera::Camera()
 {
     mStartRot = Matrix4f::identity();
     mCurrentRot = Matrix4f::identity();
+    lastClicked = Vector3f(-1);
 }
 
 void Camera::SetDimensions(int w, int h)
@@ -46,10 +47,31 @@ void Camera::SetDistance(const float distance)
     mStartDistance = mCurrentDistance = distance;
 }
 
+void Camera::setLastClicked(int x, int y) {
+    GLint viewport[4];
+    GLdouble modelview[16];
+    GLdouble projection[16];
+    GLfloat winX, winY, winZ;
+    GLdouble posX, posY, posZ;
+ 
+    glGetDoublev( GL_MODELVIEW_MATRIX, modelview );
+    glGetDoublev( GL_PROJECTION_MATRIX, projection );
+    glGetIntegerv( GL_VIEWPORT, viewport );
+ 
+    winX = (float)x;
+    winY = (float)viewport[3] - (float)y;
+    glReadPixels( x, int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ );
+ 
+    gluUnProject( winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+ 
+    lastClicked = Vector3f(posX, posY, posZ);
+}
+
 void Camera::MouseClick(Button button, int x, int y)
 {
     mStartClick[0] = x;
     mStartClick[1] = y;
+    setLastClicked(x, y);
 
     mButtonState = button;
     switch (button)
