@@ -3,8 +3,9 @@
 #include "Matrix3f.h"
 #include "Matrix4f.h"
 
-#include <iostream> 
-#include <vector> 
+#include <iostream>
+#include <vector>
+#include <stdlib.h>
 
 using std::cout;
 using std::endl;
@@ -24,10 +25,17 @@ RollingSimulation::~RollingSimulation() {
     delete stepper_;
 };
 
-void RollingSimulation::draw() {
+void RollingSimulation::draw(Vector3f clickedPoint) {
     world_->sphere_c = ball_->center_;
     world_->draw();
     ball_->draw();
+
+    // Drawing a cube at last clicked point.
+    glPushMatrix();
+    glTranslatef(clickedPoint[0], clickedPoint[1], clickedPoint[2]);
+    glutSolidCube(1);
+    glPopMatrix();
+    world_->handleClick(clickedPoint);
 };
 
 RollingSimulation::system_state_t RollingSimulation::getState() {

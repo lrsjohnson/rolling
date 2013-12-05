@@ -24,7 +24,7 @@ RollingWorld::RollingWorld() {
     num_cols = 180;
     x_extent = 120;
     z_extent = 120;
-    cout << "Creeating rolling world" << endl;
+    cout << "Creating rolling world" << endl;
     for (int r = 0; r < num_rows; r++) {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
@@ -101,6 +101,18 @@ Vector3f RollingWorld::closestPtOnTriangle(Vector3f p, Vector3f a, Vector3f b, V
     float v = vb * denom;
     float w = vc * denom;
     return a + ab * v + ac * w; //=u*a+v*b+w*c,u=va*denom=1.0f-v-w
+};
+
+void RollingWorld::handleClick(Vector3f clickedPoint) {
+    int r = x_to_r(clickedPoint[0]);
+    int c = z_to_c(clickedPoint[2]);
+    if (rc_in_bounds(r, c)) {
+        landscape_data_[r][c] += 1.0;
+    }
+};
+
+bool RollingWorld::rc_in_bounds(int r, int c) {
+    return 0 <= r && r < num_rows && 0 <= c && c < num_cols;
 };
 
 int RollingWorld::x_to_r(float x) {

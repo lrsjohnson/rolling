@@ -17,7 +17,7 @@ class RollingSimulation {
   
     typedef vector<double> system_state_t;
   
-    void draw();
+    void draw(Vector3f clickedPoint);
     void step(float time_step);
 
     system_state_t getState();

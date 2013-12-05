@@ -16,6 +16,8 @@ class RollingWorld {
     void getCollisions(RollingBall* ball, vector<Vector3f>* collision_points);
 
     float height(int r, int c);
+
+    void handleClick(Vector3f clickedPoint);
     
     Vector3f sphere_c;
 
@@ -30,6 +32,8 @@ class RollingWorld {
     
     int x_to_r(float x);
     int z_to_c(float z);
+
+    bool rc_in_bounds(int r, int c);
 
     Vector3f normal(int r, int c);
     Vector4f& color(int r, int c);    
