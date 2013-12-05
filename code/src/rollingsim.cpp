@@ -176,7 +176,10 @@ void RollingSimulation::onDownward() {
     ball_->velocity_ += Vector3f(0, -1, 0);
 };
 
-void RollingSimulation::onReset() {
-    ball_->center_ = Vector3f(0, 2.0, 0);
+Vector3f RollingSimulation::onReset() {
+    float new_height = world_->height_at_xz(0, 0) + 20.0;
+    cout << new_height << endl;
+    ball_->center_ = Vector3f(0, new_height, 0);
     ball_->velocity_ = Vector3f(0, 0, 0);
+    return ball_->center_;
 };

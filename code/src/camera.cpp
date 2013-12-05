@@ -78,7 +78,6 @@ void Camera::MouseClick(Button button, int x, int y)
         {
         case LEFT:
             mCurrentRot = mStartRot;
-            setLastClicked(x, y);
             break;
         case MIDDLE:
             mCurrentCenter = mStartCenter;

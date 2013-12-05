@@ -30,7 +30,7 @@ class RollingSimulation {
     void onUpward();
     void onDownward();
 
-    void onReset();    
+    Vector3f onReset();    
   
     // Call for the boost runge-kutta stepper
     static void system_func(const system_state_t& x,
