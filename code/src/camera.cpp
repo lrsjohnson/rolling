@@ -1,6 +1,7 @@
 #include "camera.h"
 
 #include <iostream>
+#include <limits>
 #include "extra.h"
 
 using namespace std;
@@ -9,7 +10,7 @@ Camera::Camera()
 {
     mStartRot = Matrix4f::identity();
     mCurrentRot = Matrix4f::identity();
-    lastClicked = Vector3f(-1);
+    lastClicked = Vector3f(std::numeric_limits<int>::max());
 }
 
 void Camera::SetDimensions(int w, int h)
@@ -71,13 +72,13 @@ void Camera::MouseClick(Button button, int x, int y)
 {
     mStartClick[0] = x;
     mStartClick[1] = y;
-    setLastClicked(x, y);
 
     mButtonState = button;
     switch (button)
         {
         case LEFT:
             mCurrentRot = mStartRot;
+            setLastClicked(x, y);
             break;
         case MIDDLE:
             mCurrentCenter = mStartCenter;
@@ -98,7 +99,7 @@ void Camera::MouseDrag(int x, int y)
             ArcBallRotation(x,y);
             break;
         case MIDDLE:
-            PlaneTranslation(x,y);
+            //PlaneTranslation(x,y);
             break;
         case RIGHT:
             DistanceZoom(x,y);
@@ -116,6 +117,7 @@ void Camera::MouseRelease(int x, int y)
     mStartDistance = mCurrentDistance;
     
     mButtonState = NONE;
+    setLastClicked(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
 }
 
 
