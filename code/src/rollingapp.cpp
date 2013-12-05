@@ -65,9 +65,10 @@ void RollingApplication::onKeyUp(unsigned key) {
         rolling_sim_->external_vel[2] = 0;
     } else if (key == 'r') {
         rolling_sim_->onReset();
+        camera_ref_->SetCenter(Vector3f(0, 0, 0));
+    } else if (key == 'c') {
         camera_ref_->SetDimensions(view_ref_->w(), view_ref_->h());
         camera_ref_->SetDistance(30);
-        camera_ref_->SetCenter(Vector3f(0, 0, 0));
         camera_ref_->SetRotation(Matrix4f::rotation(Vector3f(1, 0, 0), M_PI / 5.0));
     }
 };
