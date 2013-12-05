@@ -53,6 +53,12 @@ const float RollingSimulation::MIN_VELOCITY = 0.28;
 
 void RollingSimulation::step(float time_step) {
 
+    // 0. Make sure we aren't completely below surface
+    float world_height = world_->height_at_xz(ball_->center_.x(), ball_->center_.z());
+    if (ball_->center_.y() < world_height - ball_->radius()) {
+        ball_->center_ = Vector3f(ball_->center_.x(), world_height + 3 * ball_->radius(), ball_->center_.z());
+    }
+    
     // 1. detect collisions; adjust/project velocities to correct direction
     vector<Vector3f> collision_points;
     world_->getCollisions(ball_, &collision_points);
@@ -81,7 +87,6 @@ void RollingSimulation::step(float time_step) {
                 ball_->velocity_ += time_step * 1000 * Vector3f(0, projected_external_vel[1], 0);
                 added_jump = true;
             }
-
             
             if (Vector3f::dot(v_center_to_collision, ball_->velocity_) > 0) {
                 avg_collision += collision_points[i];
