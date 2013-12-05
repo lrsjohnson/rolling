@@ -73,7 +73,7 @@ scene_view->take_focus();}
         }
         Fl_Group mode_display {
           label CAMERA open
-          xywh {43 30 15 25} labelfont 1 align 8
+          xywh {55 30 105 25} labelfont 1 align 0
         } {}
       }
     }

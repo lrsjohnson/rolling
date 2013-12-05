@@ -29,7 +29,7 @@ void RollingApplication::Init(int argc, char* argv[]) {
     timer_running_ = true;
     x = 0;
     gettimeofday(&last_tick_tv_, NULL);
-    camera_mode_ = false;
+    camera_mode_ = true;
 
     // Initialize simulation
     rolling_sim_ = new RollingSimulation();
@@ -76,7 +76,7 @@ void RollingApplication::onKeyUp(unsigned key) {
     } else if (key == 'r') {
         Vector3f newCenter = rolling_sim_->onReset();
         camera_ref_->SetCenter(newCenter);
-    } else if (key == 'c') {
+    } else if (key == 'c' || key == 65289) {
         camera_mode_ = !camera_mode_;
         updateMode();
     } else if (key == 'k') {
