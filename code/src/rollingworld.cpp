@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include <math.h>
+bool FLAT = false;
 
 using std::vector;
 using std::cout;
@@ -27,7 +28,8 @@ RollingWorld::RollingWorld() {
     cout << "Creating rolling world" << endl;
     
     // Create pillars
-    
+
+    if (!FLAT) {
     for (int r = 0; r < num_rows; r += num_rows/5) {
         for (int c = 0; c < num_cols; c +=num_cols/5) {
             int x = r_to_x(r);
@@ -35,17 +37,20 @@ RollingWorld::RollingWorld() {
             obstacles_.push_back(new BoxObstacle(Vector3f(x, 0, z), 3.0, 100.0, 3.0));
         }
     }
+    }
 
     computePoints();
     computeNormals();
     computeColors();
 
+    if (!FLAT) {
     for (int r = num_rows/3; r < num_rows/2; r += num_rows/20) {
         for (int c = num_cols/3; c < num_cols/2; c += num_cols/20) {
             int x = r_to_x(r);
             int z = c_to_z(c);
             obstacles_.push_back(new BoxObstacle(Vector3f(x, height(r, c)+7, z), 5.0, 2.0, 4.0));
         }
+    }
     }
     
 
@@ -57,10 +62,13 @@ void RollingWorld::computePoints() {
     for (int ri = 0; ri < num_rows; ri++) {
         vector<Vector3f> row_vec;
 	for (int ci = 0; ci < num_cols; ci++) {
-            float landscape = 0.4 * rand_height() -
+            float landscape = 0.0;
+            if (!FLAT) {
+            landscape = 0.4 * rand_height() -
                               0.6 * (sin(ri /16.0 * 2 * M_PI)) -
                               0.8 * (sin((ri + ci) / 40.0 * 2 * M_PI)) -
                               0.25 * (ri - 0.6 * abs(ci - num_cols / 2.0));
+            }
 	    row_vec.push_back(Vector3f(r_to_x(ri),
                                        landscape,
                                        c_to_z(ci)));
@@ -76,7 +84,10 @@ void RollingWorld::computeColors() {
 	for (int ci = 0; ci < num_cols; ci++) {
 	    float ht = height(ri, ci);
             Vector4f v_color = (ht - -50)/50.0 * Vector4f(0, 1, 0, 1)  + -ht/50.0 * Vector4f(0, 0, 1, 1);
+            v_color = Vector4f(0.7, 0.8, 0.72, 1.0);
+            if (!FLAT) {
             v_color = Vector4f(0.7, 0.8, 0.72, 1.0) + rand_height() * Vector4f(-0.2, -0.2, -0.2, 0);
+            }
 	    row_vec.push_back(v_color);
 	}
         colors_.push_back(row_vec);
