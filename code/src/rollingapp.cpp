@@ -76,8 +76,11 @@ void RollingApplication::onKeyUp(unsigned key) {
     } else if (key == 'r') {
         Vector3f newCenter = rolling_sim_->onReset();
         camera_ref_->SetCenter(newCenter);
-    } else if (key == 'c' || key == 65289) {
+    } else if (key == 65289) {
         camera_mode_ = !camera_mode_;
+        updateMode();
+    } else if (key == 'c') {
+        camera_mode_ = false;
         updateMode();
     } else if (key == 'k') {
         camera_ref_->SetDimensions(view_ref_->w(), view_ref_->h());
@@ -98,7 +101,10 @@ void RollingApplication::onKeyDown(unsigned key) {
         rolling_sim_->external_vel[0] = 1;
     } else if (key == 65364 || key == 's') { // DOWN KEY
         rolling_sim_->external_vel[2] = 1;
-    }
+    } else if (key == 'c') {
+        camera_mode_ = true;
+        updateMode();
+    } 
 };
 
 
@@ -242,8 +248,8 @@ void RollingApplication::onTick() {
     // Only do x translation
     ball_delta[1] *= 0.9;
     delta_for_camera += ball_delta;
-    camera_ref_->SetCenter(camera_ref_->GetCenter() + delta_for_camera * 0.25);
-    delta_for_camera = 0.75 * delta_for_camera;
+        camera_ref_->SetCenter(camera_ref_->GetCenter() + delta_for_camera * 0.25);
+        delta_for_camera = 0.75 * delta_for_camera;
 };
 
 void RollingApplication::timer_callback(void* userdata) { // static
