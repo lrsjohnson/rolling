@@ -5,6 +5,7 @@
 #include "Vector3f.h"
 
 #include "rollingball.h"
+#include "rollingobstacle.h"
 
 using std::vector;
 
@@ -62,7 +63,8 @@ class RollingWorld {
     vector<vector<Vector3f> > normals_;
 
     Vector4f paint_color_;
-    
+
+    vector<RollingObstacle *> obstacles_;
 
     static const int COLLISION_CELL_PADDING;
 };

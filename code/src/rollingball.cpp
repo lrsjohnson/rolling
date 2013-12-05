@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#define DEBUG_SPHERE false
+#define DEBUG_SPHERE true
 
 const int RollingBall::RENDER_SLICES = 20;
 const int RollingBall::RENDER_STACKS = 15;

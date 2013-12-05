@@ -38,6 +38,8 @@ RollingWorld::RollingWorld() {
     computeNormals();
     computeColors();
 
+    obstacles_.push_back(new BoxObstacle(Vector3f(8, 0, 0), 10.0, 100.0, 10.0));
+
     paint_color_ = Vector4f(0.5, 0.5, 0.7, 1.0);
 };
 
@@ -199,44 +201,19 @@ void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) 
     //    glShadeModel(GL_SMOOTH);
     Vector4f& color_1 = color(r1, c1);
     Vector4f& color_2 = color(r2, c2);
-    Vector4f& color_3 = color(r3, c3);    
-    //glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color(r1, c1));
+    Vector4f& color_3 = color(r3, c3);
+    
     glNormal(normal_v);
     glColor3f(color_1[0], color_1[1], color_1[2]);
-    //    glNormal(normal(r1, c1));
     glVertex(p1);
 
-    //glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color(r2, c2));
-    //    glNormal(normal(r2, c2));
     glColor3f(color_2[0], color_2[1], color_2[2]);    
     glVertex(p2);
 
-    //glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color(r3, c3));
-    //    glNormal(normal(r3, c3));
     glColor3f(color_3[0], color_3[1], color_3[2]);        
     glVertex(p3);
 
     glEnd();
-    /*
-    Vector3f cp = closestPtOnTriangle(sphere_c, p1, p2, p3);
-    float dist = (cp - sphere_c).abs();
-    cout << dist << endl;
-    if (dist < 1.0) {
-        glDisable(GL_LIGHTING);
-        glBegin(GL_LINES);
-        glColor3f(1.0, 0, 0);
-        glVertex(cp);
-        glColor3f(1.0, 0, 0);
-        glVertex(sphere_c);
-        glEnd();
-        glEnable(GL_LIGHTING);        
-    }
-        
-    glPushMatrix();
-    glTranslatef(cp[0], cp[1], cp[2]);
-    glutSolidCube(0.1);
-    glPopMatrix();
-    */
 };
 
 
@@ -326,6 +303,7 @@ void RollingWorld::getCollisions(RollingBall* ball, vector<Vector3f>* collision_
     float center_x = ball->center_.x();
     float center_z = ball->center_.z();
 
+    // Get collisions with surface
     int min_r = max(x_to_r(center_x - radius) - COLLISION_CELL_PADDING, 0);
     int max_r = min(x_to_r(center_x + radius) + COLLISION_CELL_PADDING, num_rows - 1);
 
@@ -338,6 +316,12 @@ void RollingWorld::getCollisions(RollingBall* ball, vector<Vector3f>* collision_
             getCollisionsForSquare(r, c, ball, collision_points);
         }
     }
+
+    // Get collisions with obstacles
+    int num_obstacles = obstacles_.size();
+    for (int i = 0; i < num_obstacles; i++) {
+        obstacles_[i]->getCollisionsForObstacle(ball, collision_points);
+    }
 }
 
 void RollingWorld::draw() {
@@ -345,15 +329,22 @@ void RollingWorld::draw() {
     glPushAttrib(GL_ALL_ATTRIB_BITS);
     glPushMatrix();
 
-    // Plane is offset by -1
     glBegin(GL_TRIANGLES);
 
+    // Draw surface
     for (int r = 0; r < num_rows - 1; r++) {
         for (int c = 0; c < num_cols - 1; c++) {
             drawSquare(r, c);
         }
     }
 
+    // Draw obstacles
+    int num_obstacles = obstacles_.size();
+    for (int i = 0; i < num_obstacles; i++) {
+        obstacles_[i]->draw();
+    }
+
+    // Draw pillars
     for (int r = 0; r < num_rows; r += num_rows/5) {
         for (int c = 0; c < num_cols; c +=num_cols/5) {
             int x = r_to_x(r);
