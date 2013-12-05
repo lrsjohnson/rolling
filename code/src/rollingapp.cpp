@@ -29,6 +29,7 @@ void RollingApplication::Init(int argc, char* argv[]) {
     timer_running_ = true;
     x = 0;
     gettimeofday(&last_tick_tv_, NULL);
+    camera_mode_ = false;
 
     // Initialize simulation
     rolling_sim_ = new RollingSimulation();
@@ -64,9 +65,11 @@ void RollingApplication::onKeyUp(unsigned key) {
     } else if (key == 65364 || key == 's') { // DOWN KEY
         rolling_sim_->external_vel[2] = 0;
     } else if (key == 'r') {
-        rolling_sim_->onReset();
-        camera_ref_->SetCenter(Vector3f(0, 0, 0));
+        Vector3f newCenter = rolling_sim_->onReset();
+        camera_ref_->SetCenter(newCenter);
     } else if (key == 'c') {
+        camera_mode_ = false;
+    } else if (key == 'k') {
         camera_ref_->SetDimensions(view_ref_->w(), view_ref_->h());
         camera_ref_->SetDistance(30);
         camera_ref_->SetRotation(Matrix4f::rotation(Vector3f(1, 0, 0), M_PI / 5.0));
@@ -85,6 +88,8 @@ void RollingApplication::onKeyDown(unsigned key) {
         rolling_sim_->external_vel[0] = 1;
     } else if (key == 65364 || key == 's') { // DOWN KEY
         rolling_sim_->external_vel[2] = 1;
+    } else if (key == 'c') {
+        camera_mode_ = true;
     }
 };
 
@@ -97,7 +102,11 @@ void RollingApplication::onMouseClick(unsigned button, int x, int y) {
     case FL_RIGHT_MOUSE: camera_button = Camera::RIGHT; break;
     default: return;
     }
-    camera_ref_->MouseClick(camera_button, x, y);
+    if (camera_mode_) {
+        camera_ref_->MouseClick(camera_button, x, y);
+    } else {
+        camera_ref_->setLastClicked(x, y);
+    }
 };
 
 void RollingApplication::onMouseDrag(int x, int y) {
@@ -134,12 +143,7 @@ void RollingApplication::draw() {
     glLoadMatrixf(camera_ref_->viewMatrix());
   
     // Draw the scene
-    rolling_sim_->draw();
-    glPushMatrix();
-    Vector3f clickedPoint = camera_ref_->lastClicked;
-    glTranslatef(clickedPoint[0], clickedPoint[1], clickedPoint[2]);
-    glutSolidCube(1);
-    glPopMatrix();
+    rolling_sim_->draw(camera_ref_->lastClicked);
 
     // Maybe draw the axes
     //  drawAxes();

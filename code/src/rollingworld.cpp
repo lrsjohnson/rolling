@@ -24,7 +24,7 @@ RollingWorld::RollingWorld() {
     num_cols = 180;
     x_extent = 120;
     z_extent = 120;
-    cout << "Creeating rolling world" << endl;
+    cout << "Creating rolling world" << endl;
     for (int r = 0; r < num_rows; r++) {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
@@ -132,6 +132,31 @@ Vector3f RollingWorld::closestPtOnTriangle(Vector3f& p, Vector3f& a, Vector3f& b
     return a + ab * v + ac * w; //=u*a+v*b+w*c,u=va*denom=1.0f-v-w
 };
 
+void RollingWorld::handleClick(Vector3f clickedPoint) {
+    int r = x_to_r(clickedPoint[0]);
+    int c = z_to_c(clickedPoint[2]);
+    if (rc_in_bounds(r, c)) {
+        makeLandRise(r, c, 1.0);
+    }
+};
+
+// Assumes r and c are in bounds.
+void RollingWorld::makeLandRise(int r, int c, float amount) {
+    landscape_data_[r][c] += amount;
+    int h = height(r, c);
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if (rc_in_bounds(r+i, c+j) && h > height(r+i, c+j) + 1) {
+                makeLandRise(r+i, c+j, amount * 0.9);
+            }
+        }
+    }
+};
+
+bool RollingWorld::rc_in_bounds(int r, int c) {
+    return 0 <= r && r < num_rows && 0 <= c && c < num_cols;
+};
+
 int RollingWorld::x_to_r(float x) {
     return (int) num_rows * (x / x_extent + 0.5);
 };
@@ -152,6 +177,16 @@ float RollingWorld::c_to_z(int c) {
 
 float RollingWorld::height(int r, int c) {
     return landscape_data_[r][c];
+};
+
+// returns -1 if not in bounds.
+float RollingWorld::height_at_xz(float x, float z) {
+    int r = x_to_r(x);
+    int c = z_to_c(z);
+    if (!rc_in_bounds(r, c)) {
+        return -1;
+    }
+    return height(r, c);
 };
 
 Vector4f& RollingWorld::color(int r, int c) {

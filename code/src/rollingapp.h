@@ -46,6 +46,8 @@ class RollingApplication {
     Vector3f delta_for_camera;
 
  private:
+    bool camera_mode_;
+
     // Singleton instance
     static RollingApplication* instance_;
 

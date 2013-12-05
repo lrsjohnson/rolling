@@ -17,7 +17,7 @@ class RollingSimulation {
   
     typedef vector<double> system_state_t;
   
-    void draw();
+    void draw(Vector3f clickedPoint);
     void step(float time_step);
 
     system_state_t getState();
@@ -30,7 +30,7 @@ class RollingSimulation {
     void onUpward();
     void onDownward();
 
-    void onReset();    
+    Vector3f onReset();    
   
     // Call for the boost runge-kutta stepper
     static void system_func(const system_state_t& x,
