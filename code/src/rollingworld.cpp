@@ -34,11 +34,22 @@ RollingWorld::RollingWorld() {
                                          - 0.25 * (r - 0.6 * abs(c - num_cols / 2.0)));
         }
     }
+
+    // Create pillars
+    
+    for (int r = 0; r < num_rows; r += num_rows/5) {
+        for (int c = 0; c < num_cols; c +=num_cols/5) {
+            int x = r_to_x(r);
+            int z = c_to_z(c);
+            obstacles_.push_back(new BoxObstacle(Vector3f(x, 0, z), 3.0, 100.0, 3.0));
+        }
+    }
+    
+
     computePoints();
     computeNormals();
     computeColors();
 
-    obstacles_.push_back(new BoxObstacle(Vector3f(8, 0, 0), 10.0, 100.0, 10.0));
 
     paint_color_ = Vector4f(0.5, 0.5, 0.7, 1.0);
 };
@@ -344,19 +355,6 @@ void RollingWorld::draw() {
         obstacles_[i]->draw();
     }
 
-    // Draw pillars
-    for (int r = 0; r < num_rows; r += num_rows/5) {
-        for (int c = 0; c < num_cols; c +=num_cols/5) {
-            int x = r_to_x(r);
-            int z = c_to_z(c);
-            glPushMatrix();
-            glTranslatef(x, 0, z);
-            glScaled(1, 100, 1);
-            glutSolidCube(1);
-            glPopMatrix();
-        }
-    }
-    
     
 
     glEnd();

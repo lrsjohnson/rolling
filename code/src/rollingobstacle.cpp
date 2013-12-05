@@ -15,11 +15,6 @@ void RollingObstacle::getCollisionsForTriangle(Vector3f& p1,
                                            Vector3f& p3,
                                            RollingBall* ball,
                                            vector<Vector3f>* collision_points) {
-    //    cout << "Tri"<< endl;
-    //    p1.print();
-    //    p2.print();
-    //    p3.print();
-        
     Vector3f cp = closestPtOnTriangle(ball->center_, p1, p2, p3);
     float dist = (cp - ball->center_).abs();
     if (dist < ball->radius() * 1.05) {
@@ -101,10 +96,10 @@ void BoxObstacle::getCollisionsForObstacle(RollingBall* ball, vector<Vector3f>* 
 };
 
 void BoxObstacle::draw() {
-    cout << "drawing box!" << endl;
     glPushMatrix();
     glTranslatef(center[0], center[1], center[2]);
     glScaled(w_x_, w_y_, w_z_);
+    glColor4f(color_[0], color_[1], color_[2], color_[3]);
     glutSolidCube(1.0);
     glPopMatrix();
 };

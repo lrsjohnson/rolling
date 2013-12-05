@@ -64,6 +64,7 @@ void RollingSimulation::step(float time_step) {
         Vector3f avg_collision = Vector3f::ZERO;
         int num_collisions = collision_points.size();
         float max_penetration = 0;
+        Vector3f max_penetration_vec(0, 0, 0);
         int num_collisions_in_v_direction = 0;
         for (int i = 0; i < num_collisions; i++) {
             Vector3f v_center_to_collision = (collision_points[i] - ball_->center_);
@@ -73,6 +74,7 @@ void RollingSimulation::step(float time_step) {
                 float penetration_dist = ball_->radius()*1.1 - v_center_to_collision.abs();
                 if (penetration_dist > max_penetration) {
                     max_penetration = penetration_dist;
+                    max_penetration_vec = v_center_to_collision;
                 }
             }
         }
@@ -91,12 +93,11 @@ void RollingSimulation::step(float time_step) {
             ball_->t_vel_ = ball_->velocity_;
         }
         if (max_penetration > 0.1 * ball_->radius()) {
-            ball_->t_vel_ -= 1 *collision_unit_normal * max_penetration;
+            ball_->t_vel_ -= 10.0 * (max_penetration_vec + collision_unit_normal) * (max_penetration * max_penetration * max_penetration);
         }
         if (ball_->n_vel_.abs() > 3) {
             ball_->t_vel_ -= min(ball_->n_vel_.abs() - 3.0, 5.0) * ball_->n_vel_.normalized();
         }
-        
     } else {
         ball_->avg_collision = Vector3f::ZERO;
         ball_->n_vel_ = Vector3f::ZERO;
