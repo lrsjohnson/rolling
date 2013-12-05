@@ -6,7 +6,7 @@
 
 #include <cstdlib>
 #include <iostream>
-
+#include <algorithm>
 
 using std::vector;
 using std::cout;
@@ -128,18 +128,31 @@ void RollingWorld::handleClick(Vector3f clickedPoint) {
     int r = x_to_r(clickedPoint[0]);
     int c = z_to_c(clickedPoint[2]);
     if (rc_in_bounds(r, c)) {
+        distanceLandRise = distanceLandRise + 1;
         makeLandRise(r, c, 1.0);
     }
 };
 
 // Assumes r and c are in bounds.
 void RollingWorld::makeLandRise(int r, int c, float amount) {
-    points_[r][c] += Vector3f(0, amount, 0);
+    //cout << r << " " << c << " " << amount << endl;
     int h = height(r, c);
-    for (int i = -1; i < 2; i++) {
-        for (int j = -1; j < 2; j++) {
-            if (rc_in_bounds(r+i, c+j) && h > height(r+i, c+j) + 1) {
-                makeLandRise(r+i, c+j, amount * 0.9);
+    for (int i = -distanceLandRise; i <= distanceLandRise; i++) {
+        for (int j = -distanceLandRise; j <= distanceLandRise; j++) {
+            if (rc_in_bounds(r+i, c+j)) {
+                int distance = abs(i) + abs(j);
+                float newAmount = amount / (5.0 + 1.0 * distance / (1.0 + min(8, distanceLandRise)));
+                /*if (height(r, c) - height(r+i, c+j) > distance) {
+                    newAmount = height(r, c) - distance;
+                    }*/
+                if (newAmount > 1) {
+                    cout << (r+i) << " " << (c+j) << " " << distance << " " << newAmount << endl;
+                }
+                if (newAmount < 0) {
+                    continue;
+                }
+                points_[r+i][c+j] += Vector3f(0, newAmount, 0);
+                //makeLandRise(r+i, c+j, amount, origR, origC);
             }
         }
     }
