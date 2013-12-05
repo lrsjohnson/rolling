@@ -45,6 +45,10 @@ void RollingSimulation::handleClick(bool leftClick) {
     world_->landRiseUp = leftClick;
 };
 
+void RollingSimulation::toggleDebug() {
+    ball_->debug_sphere = !ball_->debug_sphere;
+};
+
 RollingSimulation::system_state_t RollingSimulation::getState() {
     vector<double> state;
     //  state.push_back(ball_->rotation);

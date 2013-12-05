@@ -12,6 +12,7 @@ class RollingBall {
   public:
     RollingBall(Vector3f center, float r);
     ~RollingBall();
+    bool debug_sphere;
 
     void draw();
 

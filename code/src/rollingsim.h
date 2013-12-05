@@ -20,6 +20,7 @@ class RollingSimulation {
     void draw(Vector3f clickedPoint, bool terraforming);
     void step(float time_step);
     void handleClick(bool leftClick);
+    void toggleDebug();
 
     system_state_t getState();
     void setState(system_state_t);  

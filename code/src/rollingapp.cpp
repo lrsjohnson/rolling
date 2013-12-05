@@ -89,6 +89,8 @@ void RollingApplication::onKeyUp(unsigned key) {
         camera_ref_->SetDimensions(view_ref_->w(), view_ref_->h());
         camera_ref_->SetDistance(30);
         camera_ref_->SetRotation(Matrix4f::rotation(Vector3f(1, 0, 0), M_PI / 5.0));
+    } else if (key == 'p') {
+        rolling_sim_->toggleDebug();
     }
 };
 
