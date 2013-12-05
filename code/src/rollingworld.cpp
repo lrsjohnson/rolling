@@ -187,7 +187,7 @@ float RollingWorld::height_at_xz(float x, float z) {
     int r = x_to_r(x);
     int c = z_to_c(z);
     if (!rc_in_bounds(r, c)) {
-        return -1;
+        return -1000;
     }
     return height(r, c);
 };

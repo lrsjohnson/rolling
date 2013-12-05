@@ -33,7 +33,7 @@ void RollingApplication::Init(int argc, char* argv[]) {
 
     // Initialize simulation
     rolling_sim_ = new RollingSimulation();
-    startTimer();
+    //    startTimer();
 };
 
 int RollingApplication::Run() {

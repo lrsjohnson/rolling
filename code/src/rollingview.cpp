@@ -78,6 +78,10 @@ void RollingView::draw() {
     RollingApplication::Instance()->draw();
 };
 
+void RollingView::startTimer() {
+    RollingApplication::Instance()->startTimer();    
+};
+
 
 
 
