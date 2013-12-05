@@ -25,12 +25,6 @@ public:
                                   Vector3f& p3,
                                   RollingBall* ball,
                                   vector<Vector3f>* collision_points);
-
-    void drawTriangle(Vector3f& p1,
-                                  Vector3f& p2,
-                                  Vector3f& p3,
-                                  RollingBall* ball,
-                                  vector<Vector3f>* collision_points);
     
     Vector4f color_;
     Vector4f paint_color_;
@@ -41,7 +35,6 @@ class BoxObstacle : public RollingObstacle {
  public:
     BoxObstacle(Vector3f center_vec, float w_x, float w_y, float w_z);
     void getCollisionsForObstacle(RollingBall* ball, vector<Vector3f>* collision_points);
-    void drawObstacle(RollingBall* ball, vector<Vector3f>* collision_points);
     void draw();
 
     Vector3f center;
@@ -55,12 +48,6 @@ class BoxObstacle : public RollingObstacle {
                               Vector3f& center,
                               Vector3f& u_dir, float u,
                               Vector3f& v_dir, float v);
-
-    void drawFace(RollingBall* ball, vector<Vector3f>* collision_points,
-                              Vector3f& center,
-                              Vector3f& u_dir, float u,
-                              Vector3f& v_dir, float v);
-    
 };
 
 #endif // ROLLING_OBSTACLE_H
