@@ -20,6 +20,7 @@ class RollingWorld {
     Vector3f sphere_c;
 
     void computeNormals();
+    void computeColors();    
  private:
     Vector3f closestPtOnTriangle(Vector3f p, Vector3f a, Vector3f b, Vector3f c);
     
@@ -31,6 +32,7 @@ class RollingWorld {
     int z_to_c(float z);
 
     Vector3f normal(int r, int c);
+    Vector4f& color(int r, int c);    
     
     void drawTriangle(int r1, int c1,
                       int r2, int c2,
@@ -52,6 +54,7 @@ class RollingWorld {
     int num_rows;
     int num_cols;
     vector<vector<float> > landscape_data_;
+    vector<vector<Vector4f> > colors_;
 
     vector<vector<Vector3f> > normals_;
 
