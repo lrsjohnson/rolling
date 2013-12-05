@@ -52,6 +52,15 @@ void RollingApplication::loadView(RollingView* view) {
 
 /* Events from UI */
 
+void RollingApplication::updateMode() {
+    if (camera_mode_) {
+        ui_->mode_display->label("CAMERA");
+    } else {
+        ui_->mode_display->label("TERRAFORM");        
+    }
+    ui_->mode_group->redraw();
+};
+
 void RollingApplication::onKeyUp(unsigned key) {
     cout << "Released key num " << key << "." << endl;
     if (key == 32) {
@@ -68,7 +77,8 @@ void RollingApplication::onKeyUp(unsigned key) {
         Vector3f newCenter = rolling_sim_->onReset();
         camera_ref_->SetCenter(newCenter);
     } else if (key == 'c') {
-        camera_mode_ = false;
+        camera_mode_ = !camera_mode_;
+        updateMode();
     } else if (key == 'k') {
         camera_ref_->SetDimensions(view_ref_->w(), view_ref_->h());
         camera_ref_->SetDistance(30);
@@ -88,8 +98,6 @@ void RollingApplication::onKeyDown(unsigned key) {
         rolling_sim_->external_vel[0] = 1;
     } else if (key == 65364 || key == 's') { // DOWN KEY
         rolling_sim_->external_vel[2] = 1;
-    } else if (key == 'c') {
-        camera_mode_ = true;
     }
 };
 

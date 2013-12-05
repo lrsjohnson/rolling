@@ -37,6 +37,9 @@ class RollingApplication {
     // Timer callbacks
     static void timer_callback(void* userdata);
 
+
+    void updateMode();
+    
     void onTick();
     void startTimer();
     void stopTimer();
