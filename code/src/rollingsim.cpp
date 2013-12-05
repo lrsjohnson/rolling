@@ -57,6 +57,12 @@ const float RollingSimulation::MIN_VELOCITY = 0.28;
 
 void RollingSimulation::step(float time_step) {
 
+    // 0. Make sure we aren't completely below surface
+    float world_height = world_->height_at_xz(ball_->center_.x(), ball_->center_.z());
+    if (ball_->center_.y() < world_height - ball_->radius()) {
+        ball_->center_ = Vector3f(ball_->center_.x(), world_height + 3 * ball_->radius(), ball_->center_.z());
+    }
+    
     // 1. detect collisions; adjust/project velocities to correct direction
     vector<Vector3f> collision_points;
     world_->getCollisions(ball_, &collision_points);
@@ -71,8 +77,7 @@ void RollingSimulation::step(float time_step) {
 
     ball_->velocity_ += time_step * 30 * Vector3f(projected_external_vel[0], 0, projected_external_vel[2]);
     if (collision_points.size() > 0) {
-        // Jump
-        ball_->velocity_ += time_step * 500 * Vector3f(0, projected_external_vel[1], 0);
+        bool added_jump = false;
         Vector3f avg_collision = Vector3f::ZERO;
         int num_collisions = collision_points.size();
         float max_penetration = 0;
@@ -80,6 +85,13 @@ void RollingSimulation::step(float time_step) {
         int num_collisions_in_v_direction = 0;
         for (int i = 0; i < num_collisions; i++) {
             Vector3f v_center_to_collision = (collision_points[i] - ball_->center_);
+
+            if (!added_jump && v_center_to_collision.normalized().y() < -0.1) { 
+                // Jump
+                ball_->velocity_ += time_step * 1000 * Vector3f(0, projected_external_vel[1], 0);
+                added_jump = true;
+            }
+            
             if (Vector3f::dot(v_center_to_collision, ball_->velocity_) > 0) {
                 avg_collision += collision_points[i];
                 num_collisions_in_v_direction++;
