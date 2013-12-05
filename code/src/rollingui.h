@@ -4,7 +4,7 @@
 #define rollingui_h
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
-#include "RollingView.h"
+#include "rollingview.h"
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Group.H>
 

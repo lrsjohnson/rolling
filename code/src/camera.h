@@ -49,6 +49,7 @@ class Camera
     Vector3f GetCenter() const { return mCurrentCenter; }
     Matrix4f GetRotation() const { return mCurrentRot; }
     float GetDistance() const { return mCurrentDistance; }
+    Vector3f lastClicked;
     
  private:
 
@@ -74,6 +75,7 @@ class Camera
     void ArcBallRotation(int x, int y);
     void PlaneTranslation(int x, int y);
     void DistanceZoom(int x, int y);
+    void setLastClicked(int x, int y);
 };
 
 #endif
