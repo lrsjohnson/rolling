@@ -19,21 +19,11 @@ float rand_height() {
 };
 
 RollingWorld::RollingWorld() {
-    landscape_data_ = vector<vector<float> >();
     num_rows = 180;
     num_cols = 180;
     x_extent = 120;
     z_extent = 120;
     cout << "Creating rolling world" << endl;
-    for (int r = 0; r < num_rows; r++) {
-        landscape_data_.push_back(vector<float>());
-        for (int c = 0; c < num_cols; c++) {
-            landscape_data_[r].push_back(0.4 * rand_height() -
-                                         0.6 * (sin(r /16.0 * 2 * M_PI)) -
-                                         0.8 * (sin((r + c) / 40.0 * 2 * M_PI))
-                                         - 0.25 * (r - 0.6 * abs(c - num_cols / 2.0)));
-        }
-    }
     computePoints();
     computeNormals();
     computeColors();
@@ -48,8 +38,12 @@ void RollingWorld::computePoints() {
     for (int ri = 0; ri < num_rows; ri++) {
         vector<Vector3f> row_vec;
 	for (int ci = 0; ci < num_cols; ci++) {
+            float landscape = 0.4 * rand_height() -
+                              0.6 * (sin(ri /16.0 * 2 * M_PI)) -
+                              0.8 * (sin((ri + ci) / 40.0 * 2 * M_PI)) -
+                              0.25 * (ri - 0.6 * abs(ci - num_cols / 2.0));
 	    row_vec.push_back(Vector3f(r_to_x(ri),
-                                       height(ri, ci),
+                                       landscape,
                                        c_to_z(ci)));
 	}
         points_.push_back(row_vec);
@@ -131,7 +125,7 @@ void RollingWorld::handleClick(Vector3f clickedPoint) {
 
 // Assumes r and c are in bounds.
 void RollingWorld::makeLandRise(int r, int c, float amount) {
-    landscape_data_[r][c] += amount;
+    points_[r][c] += Vector3f(0, amount, 0);
     int h = height(r, c);
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
@@ -165,7 +159,7 @@ float RollingWorld::c_to_z(int c) {
 };
 
 float RollingWorld::height(int r, int c) {
-    return landscape_data_[r][c];
+    return points_[r][c].y();
 };
 
 // returns -1 if not in bounds.

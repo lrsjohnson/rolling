@@ -64,7 +64,6 @@ class RollingWorld {
     float z_extent;
     int num_rows;
     int num_cols;
-    vector<vector<float> > landscape_data_;
     vector<vector<Vector4f> > colors_;
     vector<vector<Vector3f> > points_;    
     vector<vector<Vector3f> > normals_;
