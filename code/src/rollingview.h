@@ -16,6 +16,8 @@ class RollingView : public Fl_Gl_Window {
     virtual void update();
     virtual void draw();
 
+    void startTimer();
+
  private:
     Camera* camera_;
 
