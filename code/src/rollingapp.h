@@ -27,7 +27,8 @@ class RollingApplication {
     void onKeyUp(unsigned key);
     void onKeyDown(unsigned key);    
     void onMouseClick(unsigned button, int x, int y);
-    void onMouseDrag(int x, int y);    
+    void onMouseDrag(int x, int y);
+    void onMouseMove(int x, int y);        
     void onMouseRelease(int x, int y);
 
     // Get references

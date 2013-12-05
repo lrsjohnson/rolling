@@ -124,6 +124,9 @@ void RollingApplication::onMouseClick(unsigned button, int x, int y) {
     }
 };
 
+void RollingApplication::onMouseMove(int x, int y) {
+};
+
 void RollingApplication::onMouseDrag(int x, int y) {
     camera_ref_->MouseDrag(x, y);
 };

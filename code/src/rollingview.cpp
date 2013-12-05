@@ -36,6 +36,7 @@ int RollingView::handle( int event ) {
     switch( event ) {
     case FL_PUSH: RollingApplication::Instance()->onMouseClick(eventButton, eventCoordX, eventCoordY); break;
     case FL_DRAG: RollingApplication::Instance()->onMouseDrag(eventCoordX, eventCoordY); break;
+    case FL_MOVE: RollingApplication::Instance()->onMouseMove(eventCoordX, eventCoordY); break;        
     case FL_RELEASE: RollingApplication::Instance()->onMouseRelease(eventCoordX, eventCoordY); break;    
     case FL_KEYDOWN: RollingApplication::Instance()->onKeyDown(Fl::event_key()); break;        
     case FL_KEYUP: RollingApplication::Instance()->onKeyUp(Fl::event_key()); break;
