@@ -59,6 +59,8 @@ void RollingView::setupOpenGL() {
     glEnable(GL_LIGHT0);
     glEnable(GL_NORMALIZE);
 
+    glEnable(GL_COLOR_MATERIAL);    
+
     camera_->SetDimensions(w(), h());
     camera_->SetViewport(0, 0, w(), h());
     camera_->ApplyViewport();

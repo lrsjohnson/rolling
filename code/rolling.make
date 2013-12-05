@@ -72,6 +72,7 @@ OBJECTS := \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/rollingapp.o \
 	$(OBJDIR)/rollingball.o \
+	$(OBJDIR)/rollingobstacle.o \
 	$(OBJDIR)/rollingsim.o \
 	$(OBJDIR)/rollingview.o \
 	$(OBJDIR)/rollingworld.o \
@@ -146,6 +147,9 @@ $(OBJDIR)/rollingapp.o: src/rollingapp.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/rollingball.o: src/rollingball.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+$(OBJDIR)/rollingobstacle.o: src/rollingobstacle.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 $(OBJDIR)/rollingsim.o: src/rollingsim.cpp
