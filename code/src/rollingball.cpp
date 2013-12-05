@@ -3,14 +3,13 @@
 
 #include <cassert>
 
-#define DEBUG_SPHERE false
-
 const int RollingBall::RENDER_SLICES = 20;
 const int RollingBall::RENDER_STACKS = 15;
 
 const double PI = 3.1415926535897932384626433832795;
 
 RollingBall::RollingBall(Vector3f center, float r) {
+    debug_sphere = false;
     assert(center_);
     assert(r > 0);
     center_ = center;
@@ -43,7 +42,7 @@ void RollingBall::draw() {
     // Draw Sphere
     //  glShadeMode(SMOOTH);
 
-    if (DEBUG_SPHERE) {
+    if (debug_sphere) {
         drawDebugSphere();
     } else {
         glPushMatrix();

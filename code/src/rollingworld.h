@@ -19,7 +19,7 @@ class RollingWorld {
     float height(int r, int c);
     float height_at_xz(float x, float z);
 
-    void handleClick(Vector3f clickedPoint);
+    void terraform(Vector3f clickedPoint);
     
     Vector3f sphere_c;
 

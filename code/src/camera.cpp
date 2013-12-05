@@ -116,7 +116,6 @@ void Camera::MouseRelease(int x, int y)
     mStartDistance = mCurrentDistance;
     
     mButtonState = NONE;
-    setLastClicked(std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
 }
 
 

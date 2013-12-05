@@ -35,10 +35,19 @@ RollingWorld::RollingWorld() {
             obstacles_.push_back(new BoxObstacle(Vector3f(x, 0, z), 3.0, 100.0, 3.0));
         }
     }
+
     computePoints();
     computeNormals();
     computeColors();
 
+    for (int r = num_rows/3; r < num_rows/2; r += num_rows/20) {
+        for (int c = num_cols/3; c < num_cols/2; c += num_cols/20) {
+            int x = r_to_x(r);
+            int z = c_to_z(c);
+            obstacles_.push_back(new BoxObstacle(Vector3f(x, height(r, c)+7, z), 5.0, 2.0, 4.0));
+        }
+    }
+    
 
     paint_color_ = Vector4f(0.5, 0.5, 0.7, 1.0);
 };
@@ -125,7 +134,7 @@ Vector3f RollingWorld::closestPtOnTriangle(Vector3f& p, Vector3f& a, Vector3f& b
     return a + ab * v + ac * w; //=u*a+v*b+w*c,u=va*denom=1.0f-v-w
 };
 
-void RollingWorld::handleClick(Vector3f clickedPoint) {
+void RollingWorld::terraform(Vector3f clickedPoint) {
     int r = x_to_r(clickedPoint[0]);
     int c = z_to_c(clickedPoint[2]);
     if (rc_in_bounds(r, c)) {
