@@ -106,7 +106,7 @@ void RollingApplication::onMouseClick(unsigned button, int x, int y) {
         camera_ref_->MouseClick(camera_button, x, y);
     } else {
         camera_ref_->setLastClicked(x, y);
-        rolling_sim_->handleClick();
+        rolling_sim_->handleClick(button == FL_LEFT_MOUSE);
     }
 };
 

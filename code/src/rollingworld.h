@@ -29,6 +29,7 @@ class RollingWorld {
 
     void setPaintColor(Vector4f paint_color) { paint_color_ = paint_color; };
     int distanceLandRise;
+    bool landRiseUp;
  private:
     Vector3f closestPtOnTriangle(Vector3f& p, Vector3f& a, Vector3f& b, Vector3f& c);
     

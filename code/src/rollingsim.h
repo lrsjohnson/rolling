@@ -19,7 +19,7 @@ class RollingSimulation {
   
     void draw(Vector3f clickedPoint);
     void step(float time_step);
-    void handleClick();
+    void handleClick(bool leftClick);
 
     system_state_t getState();
     void setState(system_state_t);  

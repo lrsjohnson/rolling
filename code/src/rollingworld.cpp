@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>
+#include <math.h>
 
 using std::vector;
 using std::cout;
@@ -129,7 +130,7 @@ void RollingWorld::handleClick(Vector3f clickedPoint) {
     int c = z_to_c(clickedPoint[2]);
     if (rc_in_bounds(r, c)) {
         distanceLandRise = distanceLandRise + 1;
-        makeLandRise(r, c, 1.0);
+        makeLandRise(r, c, landRiseUp ? 1.0 : -1.0);
     }
 };
 
@@ -140,16 +141,13 @@ void RollingWorld::makeLandRise(int r, int c, float amount) {
     for (int i = -distanceLandRise; i <= distanceLandRise; i++) {
         for (int j = -distanceLandRise; j <= distanceLandRise; j++) {
             if (rc_in_bounds(r+i, c+j)) {
-                int distance = abs(i) + abs(j);
+                int distance = sqrt(i*i+j*j);
                 float newAmount = amount / (5.0 + 1.0 * distance / (1.0 + min(8, distanceLandRise)));
                 /*if (height(r, c) - height(r+i, c+j) > distance) {
                     newAmount = height(r, c) - distance;
                     }*/
                 if (newAmount > 1) {
                     cout << (r+i) << " " << (c+j) << " " << distance << " " << newAmount << endl;
-                }
-                if (newAmount < 0) {
-                    continue;
                 }
                 points_[r+i][c+j] += Vector3f(0, newAmount, 0);
                 //makeLandRise(r+i, c+j, amount, origR, origC);
