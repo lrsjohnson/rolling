@@ -1,6 +1,7 @@
 #include "rollingworld.h"
 
 #include "Vector3f.h"
+#include "Vector4f.h"
 #include "extra.h"
 
 #include <cstdlib>
@@ -28,13 +29,27 @@ RollingWorld::RollingWorld() {
         landscape_data_.push_back(vector<float>());
         for (int c = 0; c < num_cols; c++) {
             landscape_data_[r].push_back(0.4 * rand_height() -
-                                         0.65 * (sin(r /16.0 * 2 * M_PI)) -
+                                         0.6 * (sin(r /16.0 * 2 * M_PI)) -
                                          0.8 * (sin((r + c) / 40.0 * 2 * M_PI))
                                          - 0.25 * (r - 0.6 * abs(c - num_cols / 2.0)));
         }
     }
     computeNormals();
+    computeColors();
+};
 
+void RollingWorld::computeColors() {
+    colors_.clear();
+    for (int ri = 0; ri < num_rows; ri++) {
+        vector<Vector4f> row_vec;
+	for (int ci = 0; ci < num_cols; ci++) {
+	    float ht = height(ri, ci);
+            Vector4f v_color = (ht - -50)/50.0 * Vector4f(0, 1, 0, 1)  + -ht/50.0 * Vector4f(0, 0, 1, 1);
+            v_color = Vector4f(0.7, 0.8, 0.72, 1.0) + rand_height() * Vector4f(-0.2, -0.2, -0.2, 0);
+	    row_vec.push_back(v_color);
+	}
+        colors_.push_back(row_vec);
+    }
 };
 
 // Based on calculations from "Real Time Collision Detectino Book"
@@ -110,6 +125,11 @@ float RollingWorld::height(int r, int c) {
     return landscape_data_[r][c];
 };
 
+Vector4f& RollingWorld::color(int r, int c) {
+    return colors_[r][c];
+};
+
+
 Vector3f RollingWorld::point(int r, int c) {
     return Vector3f(r_to_x(r),
                     height(r, c),
@@ -148,7 +168,7 @@ void RollingWorld::computeNormals() {
 	}
         normals_.push_back(row_vec);
     }
-}
+};
 
 Vector3f RollingWorld::normal(int r, int c) {
     return normals_[r][c];
@@ -157,19 +177,22 @@ Vector3f RollingWorld::normal(int r, int c) {
 void RollingWorld::drawTriangle(int r1, int c1, int r2, int c2, int r3, int c3) {
     Vector3f p1 = point(r1, c1);
     Vector3f p2 = point(r2, c2);
-    Vector3f p3 = point(r3, c3);    
+    Vector3f p3 = point(r3, c3);
 
     Vector3f normal_v = Vector3f::cross(p3 - p1, p2 - p1).normalized();
     
     glBegin(GL_TRIANGLES);
     glShadeModel(GL_SMOOTH);
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color(r1, c1));
     glNormal(normal_v);
     //    glNormal(normal(r1, c1));
     glVertex(p1);
-    
+
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color(r2, c2));
     //    glNormal(normal(r2, c2));
     glVertex(p2);
 
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color(r3, c3));
     //    glNormal(normal(r3, c3));
     glVertex(p3);
 
@@ -217,6 +240,8 @@ void RollingWorld::drawSquare(int r, int c) {
     }
 };
 
+Vector4f paint_color = Vector4f(0.5, 0.5, 0.7, 1.0);
+
 void RollingWorld::getCollisionsForTriangle(int r1, int c1,
                                             int r2, int c2,
                                             int r3, int c3,
@@ -229,6 +254,9 @@ void RollingWorld::getCollisionsForTriangle(int r1, int c1,
     Vector3f cp = closestPtOnTriangle(ball->center_, p1, p2, p3);
     float dist = (cp - sphere_c).abs();
     if (dist < ball->radius() * 1.05) {
+        colors_[r1][c1] = (colors_[r1][c1] + paint_color) / 2.0;
+        colors_[r2][c2] = (colors_[r1][c1] + paint_color) / 2.0;
+        colors_[r3][c3] = (colors_[r1][c1] + paint_color) / 2.0;        
         collision_points->push_back(cp);
     }
 };
