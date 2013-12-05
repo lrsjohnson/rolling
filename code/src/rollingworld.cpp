@@ -381,9 +381,6 @@ void RollingWorld::draw() {
     for (int i = 0; i < num_obstacles; i++) {
         obstacles_[i]->draw();
     }
-
-    
-
     glEnd();
 
     // Revert state, etc.
